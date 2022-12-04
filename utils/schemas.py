@@ -13,10 +13,14 @@ class Role(Enum):
     no_role = "no_role"
 
 class User(BaseModel):
+    id: int | None = None
     name: str
     email: EmailStr
     phone: str
     role: Role | None = None
+    class Config:
+        orm_mode = True
+
 
 class UserCreate(User):
     password: str
@@ -29,8 +33,22 @@ class TokenData(BaseModel):
     id: str | None = None
 
 class StockItem(BaseModel):
-    id : str | None
     name: str
     unit : str
     price: float
     description: str
+
+
+class Requisition(BaseModel):
+    stock_id: int
+    quantity: float
+    tag: str
+
+class SaleItem(BaseModel):
+    name: str
+    unit: str
+    price: float
+    description: str
+
+class Sale(BaseModel):
+    pass

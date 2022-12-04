@@ -31,7 +31,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @router.patch('/{id}')
 def update_user(id: int, user: schemas.UserCreate, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
-    if current_user.role not in ("boss", "deputy_boss"):
+    if current_user.role.value not in ("boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are unauthorised to do so") 
     update_user = user.dict(exclude_unset=True)
     user_query = db.query(models.User).filter(models.Use.id == id)

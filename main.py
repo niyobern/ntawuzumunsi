@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from database import models
 from database.database import get_db
 from utils.schemas import User
-from routes import user, auth, stock_item
+from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product
 
 app = FastAPI()
 
@@ -22,5 +22,9 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(stock_item.router)
+app.include_router(purchase.router)
+app.include_router(sale_item.router)
+app.include_router(sale.router)
+app.include_router(kitchen_product.router)
 
 

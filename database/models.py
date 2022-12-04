@@ -51,9 +51,8 @@ class Requisition(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     stock_id = Column(Integer, ForeignKey("stock_items.id", ondelete="CASCADE"))
     quantity = Column(Float, nullable=False)
-    unit = Column(String, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
-    description = Column(String)
+    tag = Column(String)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 class SaleItem(Base):
@@ -74,14 +73,14 @@ class Sale(Base):
     item_id = Column(ForeignKey("sale_items.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete="CASCADE"))
-    description = Column(String)
+    tag = Column(String)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 class Eservice(Base):
     __tablename__ = "e_services"
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
-    description = Column(String)
+    tag = Column(String)
     price = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
@@ -92,7 +91,7 @@ class KitchenProduct(Base):
     item_id = Column(ForeignKey("sale_items.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    description = Column(String)
+    tag = Column(String)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 class MaterialRequest(Base):
@@ -101,6 +100,6 @@ class MaterialRequest(Base):
     stock_id = Column(ForeignKey("stock_items.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    description = Column(String)
+    tag = Column(String)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
