@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database import models
 from database.database import get_db
-from schemas import User
+from utils.schemas import User
 
 
 app = FastAPI()
