@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 from database import models
-from utils import schemas, utils
+from utils import schemas, utils, oauth2
 from database.database import get_db
 
 router = APIRouter(
@@ -13,20 +13,33 @@ router = APIRouter(
 # /users
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     # hash the password - user.password
     # user_dict = user.dict()
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
-
+    role = user.role.value
+    user.role = role
     new_user = models.User(**user.dict())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
 
     return new_user
+
+@router.patch('/{id}')
+def update_user(id: int, user: schemas.UserCreate, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    if current_user.role not in ("boss", "deputy_boss"):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are unauthorised to do so") 
+    update_user = user.dict(exclude_unset=True)
+    user_query = db.query(models.User).filter(models.Use.id == id)
+    user_query.update(**update_user.dict(), synchronize_session=False)
+    db.commit()
+    updated_user = user_query.first()
+    return updated_user
+
 
 
 @router.get('/{id}', response_model=schemas.User)
