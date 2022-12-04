@@ -18,3 +18,10 @@ class User(BaseModel):
     email: EmailStr
     phone: str
     role: Roles | None = None
+
+class UserCreate(User):
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

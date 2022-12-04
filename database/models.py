@@ -36,6 +36,7 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     phone = Column(String, nullable=False, unique=True)
     role = Column(Enum(Roles), nullable=False, server_default="no_role")
+    password = Column(String, nullable=False)
     stock_items = relationship("StockItem")
     requisitions = relationship("Requisition")
     sale_items = relationship("SaleItem")
