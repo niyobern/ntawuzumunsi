@@ -1,6 +1,7 @@
 from typing import List
 from pydantic import BaseModel, EmailStr
 from enum import Enum
+from typing import Optional
 class Role(Enum):
     boss = "boss"
     deputy_boss = "deputy_boss"
@@ -13,11 +14,11 @@ class Role(Enum):
     no_role = "no_role"
 
 class User(BaseModel):
-    id: int | None = None
+    id: Optional[int]
     name: str
     email: EmailStr
     phone: str
-    role: Role | None = None
+    role: Optional[Role]
     class Config:
         orm_mode = True
 
@@ -30,7 +31,7 @@ class Token(BaseModel):
     token_type: str
 
 class TokenData(BaseModel):
-    id: str | None = None
+    id: Optional[str]
 
 class StockItem(BaseModel):
     name: str
@@ -64,4 +65,9 @@ class MaterialRequest(BaseModel):
     stock_id: int
     quantity: float
     tag: str
-    accepted: bool | None = None
+    accepted: Optional[str]
+
+class Eservice(BaseModel):
+    name: str
+    price: float
+    description: Optional[str]

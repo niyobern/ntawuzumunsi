@@ -3,12 +3,13 @@ from sqlalchemy.orm import Session
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
+from typing import Optional
 
 router = APIRouter(prefix="/saleitem", tags=['Sale Items'])
 
 @router.get('/')
 def get_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
-  limit: int = 10, skip: int = 0, search: str | None = ""):
+  limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "retailer"):

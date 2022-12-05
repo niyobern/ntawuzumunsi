@@ -17,6 +17,11 @@ class Roles(enum.Enum):
     cashier = 'cashier'
     no_role = "no_role"
 
+class CashLabel(enum.Enum):
+    sale = "sale"
+    eservice = "eservice"
+    purchase = "purchase"
+
 class StockItem(Base):
     __tablename__ =  "stock_items"
     id = Column(Integer, primary_key=True, nullable=False)
@@ -44,12 +49,13 @@ class User(Base):
     material_requests = relationship("MaterialRequest")
     kitchen_products = relationship("KitchenProduct")
     e_services = relationship("Eservice")
+    cash = relationship("Cash")
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 class Requisition(Base):
     __tablename__ = "requisitions"
     id = Column(Integer, primary_key=True, nullable=False)
-    stock_id = Column(Integer, ForeignKey("stock_items.id", ondelete="CASCADE"))
+    stock_id = Column(Integer, ForeignKey("stock_items.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
     tag = Column(String)
@@ -80,7 +86,7 @@ class Eservice(Base):
     __tablename__ = "e_services"
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
-    tag = Column(String)
+    description = Column(String)
     price = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
@@ -104,3 +110,11 @@ class MaterialRequest(Base):
     accepted = Column(Boolean)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
+class Cash(Base):
+    __tablename__ = "cash"
+    id = Column(Integer, primary_key=True, nullable=False)
+    label = Column(Enum(CashLabel), nullable=False)
+    amount = Column(Float, nullable=False)
+    label_id = Column(String, nullable=False, unique=True)
+    creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))

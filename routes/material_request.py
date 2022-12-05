@@ -3,12 +3,12 @@ from sqlalchemy.orm import Session
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
-from typing import List
+from typing import List, Optional
 
 router = APIRouter(prefix="/request", tags=["Material Request"])
 
 @router.get('/')
-def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, search: str | None = ""):
+def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, search: Optional[str] = ""):
     if current_user.role.value not in ("kitchen", "store_keeper", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "No permission")
     requests = db.query(models.MaterialRequest).filter(models.MaterialRequest.tag.contains(search)).limit(limit).offset(skip).all()

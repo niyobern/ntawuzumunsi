@@ -3,11 +3,12 @@ from sqlalchemy.orm import Session
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
+from typing import Optional
 
 router = APIRouter(prefix="/kitchen", tags=["Kitchen Products"])
 
 @router.get('/')
-def get_products(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, search: str | None = ""):
+def get_products(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, search: Optional[str] = ""):
     if current_user.role.value not in ("kitchen", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Notallowed to do this")
     products = db.query(models.KitchenProduct).filter(models.KitchenProduct.tag.contains(search)).limit(limit).offset(skip).all()

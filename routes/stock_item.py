@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
+from typing import Optional
 
 router = APIRouter(
     prefix="/stockitems",
@@ -11,7 +12,7 @@ router = APIRouter(
 
 @router.get('/')
 def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
-  limit: int = 10, skip: int = 0, search: str | None = ""):
+  limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="you have no priviledge to view this")
     if current_user.role.value not in ("boss", "deputy_boss", "store_keeper", "manager"):
