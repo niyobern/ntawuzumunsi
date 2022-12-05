@@ -1,8 +1,8 @@
-"""add all tables
+"""empty message
 
-Revision ID: 29d02328fdb0
-Revises: ae1d6c981eb1
-Create Date: 2022-12-04 00:30:24.836228
+Revision ID: 41d840545e66
+Revises: 
+Create Date: 2022-12-05 22:11:46.273015
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '29d02328fdb0'
-down_revision = 'ae1d6c981eb1'
+revision = '41d840545e66'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -24,10 +24,22 @@ def upgrade() -> None:
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('phone', sa.String(), nullable=False),
     sa.Column('role', sa.Enum('boss', 'deputy_boss', 'manager', 'store_keeper', 'retailer', 'kitchen', 'eservices', 'cashier', 'no_role', name='roles'), server_default='no_role', nullable=False),
+    sa.Column('password', sa.String(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('phone')
+    )
+    op.create_table('cash',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('label', sa.Enum('sale', 'eservice', 'purchase', name='cashlabel'), nullable=False),
+    sa.Column('amount', sa.Float(), nullable=False),
+    sa.Column('label_id', sa.String(), nullable=False),
+    sa.Column('creator', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['creator'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('label_id')
     )
     op.create_table('e_services',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -77,7 +89,8 @@ def upgrade() -> None:
     sa.Column('stock_id', sa.Integer(), nullable=False),
     sa.Column('quantity', sa.Float(), nullable=False),
     sa.Column('creator', sa.Integer(), nullable=False),
-    sa.Column('description', sa.String(), nullable=True),
+    sa.Column('tag', sa.String(), nullable=True),
+    sa.Column('accepted', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['creator'], ['users.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['stock_id'], ['stock_items.id'], ondelete='CASCADE'),
@@ -85,11 +98,10 @@ def upgrade() -> None:
     )
     op.create_table('requisitions',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('stock_id', sa.Integer(), nullable=True),
+    sa.Column('stock_id', sa.Integer(), nullable=False),
     sa.Column('quantity', sa.Float(), nullable=False),
-    sa.Column('unit', sa.String(), nullable=False),
     sa.Column('creator', sa.Integer(), nullable=False),
-    sa.Column('description', sa.String(), nullable=True),
+    sa.Column('tag', sa.String(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['creator'], ['users.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['stock_id'], ['stock_items.id'], ondelete='CASCADE'),
@@ -100,7 +112,7 @@ def upgrade() -> None:
     sa.Column('item_id', sa.Integer(), nullable=False),
     sa.Column('quantity', sa.Float(), nullable=False),
     sa.Column('creator', sa.Integer(), nullable=True),
-    sa.Column('description', sa.String(), nullable=True),
+    sa.Column('tag', sa.String(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['creator'], ['users.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['item_id'], ['sale_items.id'], ondelete='CASCADE'),
@@ -118,5 +130,6 @@ def downgrade() -> None:
     op.drop_table('stock_items')
     op.drop_table('sale_items')
     op.drop_table('e_services')
+    op.drop_table('cash')
     op.drop_table('users')
     # ### end Alembic commands ###
