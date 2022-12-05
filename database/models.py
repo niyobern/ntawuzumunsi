@@ -91,7 +91,7 @@ class KitchenProduct(Base):
     item_id = Column(ForeignKey("sale_items.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    tag = Column(String)
+    description = Column(String)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 class MaterialRequest(Base):
@@ -101,5 +101,6 @@ class MaterialRequest(Base):
     quantity = Column(Float, nullable=False)
     creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     tag = Column(String)
+    accepted = Column(Boolean)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 

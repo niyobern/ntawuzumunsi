@@ -19,3 +19,13 @@ def get_a_product(id: int, db: Session = Depends(get_db), current_user: schemas.
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="no permission")
     product = db.query(models.KitchenProduct).filter(models.KitchenProduct.id == id).first()
     return product
+
+@router.post('/')
+def add_item(item: schemas.KitchenProduct, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    if current_user.role.value != "kitchen":
+        raise HTTPException(status_code=status.HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS, detail="You don't work in kitchen")
+    product = models.KitchenProduct(**item.dict(), creator=current_user.id)
+    db.add(product)
+    db.commit()
+    db.refresh(product)
+    return product

@@ -51,4 +51,17 @@ class SaleItem(BaseModel):
     description: str
 
 class Sale(BaseModel):
-    pass
+    item_id: int
+    quantiy: float
+    tag: str
+
+class KitchenProduct(BaseModel):
+    item_id: int
+    quantity: float
+    decription: str
+
+class MaterialRequest(BaseModel):
+    stock_id: int
+    quantity: float
+    tag: str
+    accepted: bool | None = None
