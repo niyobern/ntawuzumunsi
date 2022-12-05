@@ -16,11 +16,11 @@ if 'RDS_DB_NAME' in os.environ:
 else:
     DATABASE_URL = \
         'postgresql://{username}:{password}@{host}:{port}/{database}'.format(
-            username='fastapi-songs',
-            password='complexpassword123',
+            username='postgres',
+            password='root',
             host='localhost',
             port='5432',
-            database='fastapi-songs',
+            database='ims',
         )
 
 # SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
