@@ -30,6 +30,6 @@ app.include_router(material_request.router)
 app.include_router(eservice.router)
 app.include_router(cash.router)
 
-@app.gret('/')
+@app.get('/')
 def index():
     return {"message": "Hello from AWS"}
