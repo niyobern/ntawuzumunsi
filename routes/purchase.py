@@ -17,7 +17,7 @@ def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User =
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    items = db.query(models.Requisition).all()
+    items = db.query(models.Requisition).limit(limit).offset(skip).all()
     # .filter(models.Requisition.tag.contains(search)).limit(limit).offset(skip).all()
     return items
 

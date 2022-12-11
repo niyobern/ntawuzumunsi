@@ -44,7 +44,7 @@ def update_user(id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)
 
 
 
-@router.get('/{id}', response_model=schemas.User)
+@router.get('/{id}')
 def get_user(id: int, db: Session = Depends(get_db), ):
     user = db.query(models.User).filter(models.User.id == id).first()
     if not user:
