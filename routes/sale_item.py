@@ -39,7 +39,7 @@ def add_item(item: schemas.SaleItem, db: Session = Depends(get_db), current_user
     db.refresh(new_item)
     return new_item
 
-@router.put('/{id}')
+@router.patch('/{id}')
 def update_item(id: int, item: schemas.SaleItem, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not allowed")
@@ -51,7 +51,7 @@ def update_item(id: int, item: schemas.SaleItem, db: Session = Depends(get_db), 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="item not found")
     if found_item.sale or found_item.kitchen_product:
         raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail="Can't me modified")
-    item_query.update(**item.dict(), creator=current_user.id, synchronize_session=False)
+    item_query.update(item.dict(), creator=current_user.id, synchronize_session=False)
     return item_query.first()
 
 @router.delete('/{id}')
