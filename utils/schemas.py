@@ -40,6 +40,7 @@ class StockItem(BaseModel):
     unit : str
     price: float
     description: str
+    creator: str
 
 
 class Requisition(BaseModel):

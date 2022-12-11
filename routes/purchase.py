@@ -35,8 +35,8 @@ def add_item(item : schemas.Requisition, db: Session = Depends(get_db), current_
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    
-    new_item = models.Requisition(**item.dict(), creator=current_user.id)
+    item.creator=current_user.id
+    new_item = models.Requisition(**item.dict())
     db.add(new_item)
     db.commit()
     db.refresh(new_item)
