@@ -14,7 +14,6 @@ class Role(Enum):
     no_role = "no_role"
 
 class User(BaseModel):
-    id: Optional[int]
     name: str
     email: EmailStr
     phone: str
