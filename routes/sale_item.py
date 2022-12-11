@@ -69,4 +69,6 @@ def delete(id: int, db: Session = Depends(get_db), current_user: schemas.User = 
         raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail="Can't me modified")
 
     item_query.delete(synchronize_session=False)
+    db.commit()
+
     return Response(status_code=status.HTTP_204_NO_CONTENT)
