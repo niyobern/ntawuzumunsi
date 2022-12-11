@@ -55,7 +55,7 @@ def update_item(id: int, item: schemas.StockItem, db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail="can't be modified")
     item_query.update(item.dict(), synchronize_session=False) 
     db.commit()  
-    return item_query.first()
+    return item
 
 @router.delete('/{id}')
 def delete_item(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
