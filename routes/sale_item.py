@@ -51,7 +51,7 @@ def update_item(id: int, item: schemas.SaleItem, db: Session = Depends(get_db), 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="item not found")
     if found_item.sale or found_item.kitchen_product:
         raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail="Can't me modified")
-    item["creator"] = current_user.id
+    item.creator = current_user.id
     item_query.update(item.dict(), synchronize_session=False)
     return item_query.first()
 
