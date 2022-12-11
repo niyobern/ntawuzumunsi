@@ -34,8 +34,9 @@ def update_user(id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)
     if current_user.role.value not in ("boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are unauthorised to do so") 
     user_role = user.role.value
+    user.role = user_role
     user_query = db.query(models.User).filter(models.User.id == id)
-    user_query.update(role=user_role, synchronize_session=False)
+    user_query.update(**user.dict(), synchronize_session=False)
     db.commit()
     updated_user = user_query.first()
     return updated_user
