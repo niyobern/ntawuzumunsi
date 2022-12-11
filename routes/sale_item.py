@@ -53,6 +53,7 @@ def update_item(id: int, item: schemas.SaleItem, db: Session = Depends(get_db), 
         raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail="Can't me modified")
     item.creator = current_user.id
     item_query.update(item.dict(), synchronize_session=False)
+    db.commit()
     return item
 
 @router.delete('/{id}')

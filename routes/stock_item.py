@@ -41,7 +41,7 @@ def add_item(item: schemas.StockItem, db: Session = Depends(get_db), current_use
     db.refresh(new_item)
     return new_item
 
-@router.put('/{id}')
+@router.patch('/{id}')
 def update_item(id: int, item: schemas.StockItem, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="you have no priviledge to view this")
@@ -66,4 +66,5 @@ def delete_item(id: int, db: Session = Depends(get_db), current_user: schemas.Us
     item_query = db.query(models.StockItem).filter(models.StockItem.id == id)
     found_item = item_query.first()
     item_query.delete(synchronize_session=False)
+    db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
