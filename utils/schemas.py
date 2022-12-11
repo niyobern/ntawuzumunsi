@@ -22,7 +22,9 @@ class User(BaseModel):
     class Config:
         orm_mode = True
 
-
+class userUpdate(BaseModel):
+    role: Role
+    
 class UserCreate(User):
     password: str
 
