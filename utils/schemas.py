@@ -62,7 +62,7 @@ class Sale(BaseModel):
 class KitchenProduct(BaseModel):
     item_id: int
     quantity: float
-    decription: str
+    description: str
 
 class MaterialRequest(BaseModel):
     stock_id: int
