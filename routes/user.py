@@ -28,6 +28,9 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     return new_user
+@router.get('/current')
+def return_user(db: Session = Depends(get_db), user: schemas.User = Depends(oauth2.get_current_user)):
+    return user
 
 @router.patch('/{id}')
 def update_user(id: int, user: schemas.UserUpdate, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
@@ -53,6 +56,3 @@ def get_user(id: int, db: Session = Depends(get_db), user: schemas.User = Depend
 
     return user
 
-@router.get('/current')
-def return_user(db: Session = Depends(get_db), user: schemas.User = Depends(oauth2.get_current_user)):
-    return user
