@@ -54,5 +54,5 @@ def get_user(id: int, db: Session = Depends(get_db), user: schemas.User = Depend
     return user
 
 @router.get('/current')
-def return_user(user: schemas.User = Depends(oauth2.get_current_user)):
+def return_user(db: Session = Depends(get_db), user: schemas.User = Depends(oauth2.get_current_user)):
     return user
