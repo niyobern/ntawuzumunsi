@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from database import models
 from database.database import get_db
 from utils.schemas import User
-from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product, material_request, eservice, cash
+from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product, material_request, eservice, cash, links
 
 app = FastAPI()
 
@@ -29,6 +29,7 @@ app.include_router(kitchen_product.router)
 app.include_router(material_request.router)
 app.include_router(eservice.router)
 app.include_router(cash.router)
+app.include_router(links.router)
 
 @app.get('/')
 def index():
