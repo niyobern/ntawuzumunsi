@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
+import datetime
 
 router = APIRouter(
     prefix="/users",
@@ -14,7 +15,7 @@ router = APIRouter(
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db), start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
 
     # hash the password - user.password
     # user_dict = user.dict()

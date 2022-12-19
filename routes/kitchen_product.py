@@ -4,14 +4,14 @@ from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
 from typing import Optional
-
+import datetime
 router = APIRouter(prefix="/kitchen", tags=["Kitchen Products"])
 
 @router.get('/')
-def get_products(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, search: Optional[str] = ""):
+def get_products(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, search: Optional[str] = "", start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
     if current_user.role.value not in ("kitchen", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Notallowed to do this")
-    products = db.query(models.KitchenProduct).filter(models.KitchenProduct.tag.contains(search)).limit(limit).offset(skip).all()
+    products = db.query(models.KitchenProduct).filter(models.Cash.created_at.between(start, end)).filter(models.KitchenProduct.name.contains(search)).limit(limit).offset(skip).all()
     return products
 
 @router.get('/{id}')

@@ -3,17 +3,19 @@ from sqlalchemy.orm import Session
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
+import datetime
+
 router = APIRouter(prefix='/eservices', tags=["E-Services"])
 
 @router.get('/')
-def get_services(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10):
+def get_services(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
     if current_user.role.value not in ("manager", "boss", "eservices"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
-    services = db.query(models.Eservice).limit(limit).offset(skip).all()
+    services = db.query(models.Eservice).filter(models.Cash.created_at.between(start, end)).limit(limit).offset(skip).all()
     return services
 
 @router.post('/')
-def post_service(item: schemas.Eservice, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+def post_service(item: schemas.Eservice, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
     if current_user.role.value != "eservices":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are not authorised to do this")
     service = models.Eservice(**item.dict(), creator=current_user.id)
