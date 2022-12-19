@@ -16,6 +16,7 @@ def get_sales(db: Session = Depends(get_db), current_user : schemas.User =Depend
     sales = db.query(models.Sale).filter(models.Cash.created_at.between(start, end)).filter(models.Sale.tag.contains(search)).limit(limit).offset(skip).all()
     return sales
 
+
 @router.get('/{id}')
 def get_item(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "retailer"):

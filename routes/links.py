@@ -23,3 +23,7 @@ def get_links(db: Session = Depends(get_db), current_user : schemas.User =Depend
     elif role == "eservices":
         links = ["eservices"]
         return links
+    elif role == "kitche":
+        links = ["kitchen, stock, products"]
+    else:
+        return ["login"]
