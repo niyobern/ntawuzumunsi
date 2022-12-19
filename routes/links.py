@@ -25,5 +25,6 @@ def get_links(db: Session = Depends(get_db), current_user : schemas.User =Depend
         return links
     elif role == "kitche":
         links = ["kitchen, stock, products"]
+        return links
     else:
         return ["login"]

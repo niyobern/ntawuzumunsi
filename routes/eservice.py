@@ -4,6 +4,7 @@ from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
 import datetime
+from typing import List
 
 router = APIRouter(prefix='/eservices', tags=["E-Services"])
 
@@ -15,17 +16,18 @@ def get_services(db: Session = Depends(get_db), current_user: schemas.User = Dep
     return services
 
 @router.post('/')
-def post_service(item: schemas.Eservice, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
+def post_service(items: List[schemas.Eservice], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
     if current_user.role.value != "eservices":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are not authorised to do this")
-    service = models.Eservice(**item.dict(), creator=current_user.id)
-    db.add(service)
-    db.commit()
-    db.refresh(service)
+    for item in items:
+        service = models.Eservice(**item.dict(), creator=current_user.id)
+        db.add(service)
+        db.commit()
+        db.refresh(service)
+    
+        cash = models.Cash(label="eservice_", amount=item.price, label_id = "eservice_" + str(service.id), creator=current_user.id)
+        db.add(cash)
+        db.commit()
+        db.refresh(cash)
 
-    cash = models.Cash(label="eservice_", amount=item.price, label_id = "eservice_" + str(service.id), creator=current_user.id)
-    db.add(cash)
-    db.commit()
-    db.refresh(cash)
-
-    return service
+    return {"message": "created"}

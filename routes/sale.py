@@ -5,6 +5,7 @@ from utils import schemas, utils, oauth2
 from database.database import get_db
 from typing import Optional
 import datetime
+from typing import List
 
 router = APIRouter(prefix="/sales", tags=['Sales'])
 
@@ -25,21 +26,21 @@ def get_item(id: int, db: Session = Depends(get_db), current_user: schemas.User 
     return item
 
 @router.post('/')
-def add_sale(item: schemas.Sale, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+def add_sale(items: List[schemas.Sale], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value not in ("boss", "retailer"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="no permission")
-    new_item = models.Sale(**item.dict(), creator=current_user.id)
-    db.add(new_item)
-    db.commit()
-    db.refresh(new_item)
+    for item in items:
+        new_item = models.Sale(**item.dict(), creator=current_user.id)
+        db.add(new_item)
+        db.commit()
+        db.refresh(new_item)
+        sale_item = db.query(models.SaleItem).filter(models.SaleItem.id == item.item_id).first()
+        price_per_item = sale_item.price
+        total_price = price_per_item * item.quantity
+    
+        cash = models.Cash(label="sale_", amount=total_price, label_id = "sale_" + str(new_item.id), creator=current_user.id)
+        db.add(cash)
+        db.commit()
+        db.refresh(cash)
 
-    sale_item = db.query(models.SaleItem).filter(models.SaleItem.id == item.item_id).first()
-    price_per_item = sale_item.price
-    total_price = price_per_item * item.quantity
-
-    cash = models.Cash(label="sale_", amount=total_price, label_id = "sale_" + str(new_item.id), creator=current_user.id)
-    db.add(cash)
-    db.commit()
-    db.refresh(cash)
-
-    return new_item
+    return {"message": "created"}

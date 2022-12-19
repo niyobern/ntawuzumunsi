@@ -5,6 +5,7 @@ from utils import schemas, utils, oauth2
 from database.database import get_db
 from typing import Optional
 import datetime
+from typing import List
 router = APIRouter(prefix="/saleitem", tags=['Sale Items'])
 
 @router.get('/')
@@ -28,17 +29,18 @@ def get_item(id: int, db: Session = Depends(get_db), current_user: schemas.User 
     return item
 
 @router.post('/')
-def add_item(item: schemas.SaleItem, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+def add_item(items: List[schemas.SaleItem], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
-    item.creator=current_user.id   
-    new_item = models.SaleItem(**item.dict())
-    db.add(new_item)
-    db.commit()
-    db.refresh(new_item)
-    return new_item
+    for item in items:
+        item.creator=current_user.id   
+        new_item = models.SaleItem(**item.dict())
+        db.add(new_item)
+        db.commit()
+        db.refresh(new_item)
+    return {"message": "created"}
 
 @router.patch('/{id}')
 def update_item(id: int, item: schemas.SaleItem, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):

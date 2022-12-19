@@ -5,6 +5,7 @@ from utils import schemas, utils, oauth2
 from database.database import get_db
 from typing import List, Optional
 import datetime
+from typing import List
 
 router = APIRouter(prefix="/request", tags=["Material Request"])
 
@@ -24,14 +25,15 @@ def get_a_request(id: int, db: Session = Depends(get_db), current_user: schemas.
     return item 
 
 @router.post('/')
-def make_request(item: schemas.MaterialRequest, db: Session = Depends(get_db),current_user: schemas.User = Depends(oauth2.get_current_user)):
+def make_request(items: List[schemas.MaterialRequest], db: Session = Depends(get_db),current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value != "kitchen":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
-    request = models.MaterialRequest(**item.dict(), creator=current_user.id)
-    db.add(request)
-    db.commit()
-    db.refresh(request)
-    return request
+    for item in items:
+        request = models.MaterialRequest(**item.dict(), creator=current_user.id)
+        db.add(request)
+        db.commit()
+        db.refresh(request)
+    return {"message": "created"}
 
 @router.post('/accept')
 def accept_request(ids: List[int], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
