@@ -12,7 +12,7 @@ app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 
-origins = ["https://lavajava-ltl3.vercel.app/", "https://.*\.vercel", "http://localhost:300"]
+origins = ["https://lavajava-ltl3.vercel.app/", "https://.*\.vercel", "http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
