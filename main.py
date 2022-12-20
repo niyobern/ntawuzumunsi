@@ -19,7 +19,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["POST", "GET", "PUT", "DELETE"],
-    allow_headers=["*"],
+    allow_headers=["Authorisation", "content-type","*"],
 )
 
 app.include_router(auth.router)
