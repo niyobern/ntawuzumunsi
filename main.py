@@ -9,7 +9,7 @@ from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_pr
 
 app = FastAPI()
 
-origins = ["https://lavajava-ltl3.vercel.app/"]
+origins = ["https://lavajava-ltl3.vercel.app/", "https://.*\.verce"]
 
 app.add_middleware(
     CORSMiddleware,
