@@ -17,7 +17,7 @@ else:
     DATABASE_URL = \
         'postgresql://{username}:{password}@{host}:{port}/{database}'.format(
             username='postgres',
-            password='root',
+            password='rootroot',
             host='localhost',
             port='5432',
             database='ims',
