@@ -8,7 +8,7 @@ import datetime
 from typing import List
 router = APIRouter(prefix="/saleitem", tags=['Sale Items'])
 
-@router.get('/', response_model=schemas.SaleItemOut)
+@router.get('/', response_model=List[schemas.SaleItemOut])
 def get_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
   limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value == "no_role":
