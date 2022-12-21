@@ -12,7 +12,7 @@ app = FastAPI()
 
 
 models.Base.metadata.create_all(bind=engine)
-# command.upgrade(revision="d7f397c11e42")
+command.upgrade(revision="d7f397c11e42", sql=True)
 
 origins = ["https://lavajava-ltl3.vercel.app:3000/", "http://76.76.21.21:3000" "https://.*\.vercel", "http://.*vercel", "http://localhost:3000"]
 
