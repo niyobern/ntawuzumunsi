@@ -14,7 +14,7 @@ router = APIRouter(
 
 @router.get('/')
 def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
-  limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
+  limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="you have no priviledge to view this")
     if current_user.role.value not in ("boss", "deputy_boss", "store_keeper", "manager"):
