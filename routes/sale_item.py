@@ -34,9 +34,10 @@ def add_item(items: List[schemas.SaleItem], db: Session = Depends(get_db), curre
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
-    for item in items:
-        item.creator=current_user.id   
-        new_item = models.SaleItem(**item.dict())
+    for x in items:
+        item = x.dict()
+        item["creator"] = current_user.id
+        new_item = models.SaleItem(**item)
         db.add(new_item)
         db.commit()
         db.refresh(new_item)

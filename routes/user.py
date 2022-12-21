@@ -40,9 +40,10 @@ def update_user(id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)
     user_role = user.role.value
     user.role = user_role
     user_query = db.query(models.User).filter(models.User.id == id)
+    found_query = user_query.first()
+    if found_query == None:
+        raise HTTPException(status_code=status.HTTTP_403_FORBIDDEN, detail="Not Found")
     user_query.update(user.dict(), synchronize_session=False)
-    db.commit()
-    updated_user = user_query.first()
     db.commit()
     return user
 
