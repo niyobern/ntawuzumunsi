@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import models
+from alembic import command
 from database.database import engine
 from utils.schemas import User
 from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product, material_request, eservice, cash, links
@@ -11,6 +12,7 @@ app = FastAPI()
 
 
 models.Base.metadata.create_all(bind=engine)
+command.upgrade(revision="d7f397c11e42")
 
 origins = ["https://lavajava-ltl3.vercel.app:3000/", "http://76.76.21.21:3000" "https://.*\.vercel", "http://.*vercel", "http://localhost:3000"]
 
