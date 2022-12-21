@@ -33,6 +33,7 @@ class StockItem(Base):
     description = Column(String)
     requisitions = relationship("Requisition")
     material_request = relationship("MaterialRequest")
+    remaining = Column(Integer)
 
 class User(Base):
     __tablename__ = "users"
