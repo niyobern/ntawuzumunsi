@@ -12,7 +12,7 @@ router = APIRouter(
     tags=['Stock Items']
 )
 
-@router.get('/', response_model=List[schemas.StockItem])
+@router.get('/')
 def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
   limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value == "no_role":
@@ -20,7 +20,9 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
     if current_user.role.value not in ("boss", "deputy_boss", "store_keeper", "manager"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     items = db.query(models.StockItem).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).limit(limit).offset(skip).all()
-
+    for item in items:
+        del item.created_at
+        del item.creator
     return items
 
 @router.get('/{id}')
