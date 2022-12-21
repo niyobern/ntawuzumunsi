@@ -45,7 +45,3 @@ def add_sale(items: List[schemas.Sale], db: Session = Depends(get_db), current_u
 
     return {"message": "created"}
 
-@router.post('/database')
-def test_database( db : Session = Depends(get_db)):
-    query = db.query(models.StockItem).filter(models.StockItem.remaining == 0).all()
-    return query
