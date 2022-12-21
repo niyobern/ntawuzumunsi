@@ -12,7 +12,7 @@ router = APIRouter(
     tags=['Stock Items']
 )
 
-@router.get('/')
+@router.get('/', response_model=List[schemas.StockItem])
 def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
   limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value == "no_role":
