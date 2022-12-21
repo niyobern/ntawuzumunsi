@@ -12,11 +12,11 @@ router = APIRouter(prefix='/eservices', tags=["E-Services"])
 def get_services(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 10, start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
     if current_user.role.value not in ("manager", "boss", "eservices"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
-    services = db.query(models.Eservice).filter(models.Cash.created_at.between(start, end)).limit(limit).offset(skip).all()
+    services = db.query(models.Eservice).filter(models.Eservice.created_at.between(start, end)).limit(limit).offset(skip).all()
     return services
 
 @router.post('/')
-def post_service(items: List[schemas.Eservice], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
+def post_service(items: List[schemas.Eservice], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value != "eservices":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are not authorised to do this")
     for item in items:

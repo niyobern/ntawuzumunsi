@@ -11,10 +11,10 @@ router = APIRouter(prefix="/request", tags=["Material Request"])
 
 @router.get('/')
 def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), 
-  limit: int = 10, skip: int = 10, search: Optional[str] = "", start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
+  limit: int = 10, skip: int = 10, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value not in ("kitchen", "store_keeper", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "No permission")
-    requests = db.query(models.MaterialRequest).filter(models.Cash.created_at.between(start, end)).filter(models.MaterialRequest.tag.contains(search)).limit(limit).offset(skip).all()
+    requests = db.query(models.MaterialRequest).filter(models.MaterialRequest.created_at.between(start, end)).filter(models.MaterialRequest.tag.contains(search)).limit(limit).offset(skip).all()
     return requests
 
 @router.get('/{id}')

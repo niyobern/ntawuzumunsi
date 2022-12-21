@@ -15,7 +15,7 @@ def get_items(db: Session = Depends(get_db), current_user: schemas.User = Depend
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "retailer"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
-    items = db.query(models.SaleItem).filter(models.Cash.created_at.between(start, end)).filter(models.SaleItem.name.contains(search)).limit(limit).offset(skip).all()
+    items = db.query(models.SaleItem).filter(models.SaleItem.created_at.between(start, end)).filter(models.SaleItem.name.contains(search)).limit(limit).offset(skip).all()
 
     return items
 
