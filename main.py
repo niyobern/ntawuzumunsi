@@ -13,7 +13,7 @@ app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 
-origins = ["https://lavajava-ltl3.vercel.app:3000/", "http://76.76.21.21:3000", "https://.*\.vercel", "http://.*vercel", "http://localhost:3000/users"]
+origins = ["https://lavajava-ltl3.vercel.app:3000/", "http://76.76.21.21:3000", "https://.*\.vercel",  "http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,4 +38,4 @@ app.include_router(links.router)
 
 @app.get('/')
 def index():
-    return {"message": "Hello from AWS"}
+    return {"message": "from AWS"}
