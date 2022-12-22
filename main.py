@@ -34,6 +34,7 @@ app.include_router(eservice.router)
 app.include_router(cash.router)
 app.include_router(links.router)
 
+
 @app.get('/')
 def index():
     return {"message": "Hello from AWS"}
