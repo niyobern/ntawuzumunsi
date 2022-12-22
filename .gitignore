@@ -1,6 +1,7 @@
 __pycache__
 env/
 /tailwind
+/platform
 # .env
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
