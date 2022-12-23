@@ -23,8 +23,9 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
     role = "boss"
-    user.role = role
-    new_user = models.User(**user.dict())
+    user_dict = user.dict()
+    user_dict["role"] = role
+    new_user = models.User(**user_dict)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
