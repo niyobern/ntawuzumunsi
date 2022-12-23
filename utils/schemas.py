@@ -24,7 +24,10 @@ class User(BaseModel):
 class UserUpdate(BaseModel):
     role: Role
 
-class UserCreate(User):
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    phone: str
     password: str
 
 class Token(BaseModel):

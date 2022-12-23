@@ -10,6 +10,7 @@ router = APIRouter(
     tags=['Users']
 )
 
+
 # /users/
 # /users
 
@@ -21,7 +22,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # user_dict = user.dict()
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
-    role = user.role.value
+    role = "boss"
     user.role = role
     new_user = models.User(**user.dict())
     db.add(new_user)
