@@ -11,7 +11,7 @@ from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_pr
 app = FastAPI()
 
 
-# models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 origins = ["https://lavajava-ltl3.vercel.app:3000/", "http://76.76.21.21:3000", "https://main.d2090mxut6ipu3.amplifyapp.com/", "https://main.d2090mxut6ipu3.amplifyapp.com:3000", "https://.*\.vercel",  "http://localhost:3000"]
 
