@@ -13,14 +13,14 @@ app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 
-origins = ["https://lavajava-ltl3.vercel.app:3000/", "http://76.76.21.21:3000", "https://main.d2090mxut6ipu3.amplifyapp.com/", "https://main.d2090mxut6ipu3.amplifyapp.com:3000", "https://.*\.vercel",  "http://localhost:3000"]
+origins = ["https://lavajava-ltl3.vercel.app:3000/", "http://76.76.21.21:3000", "https://www.lavajavahouse.net", "https://main.d2090mxut6ipu3.amplifyapp.com:3000", "https://.*\.vercel",  "http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["POST", "GET", "PUT", "DELETE", "PATCH"],
-    allow_headers=["Authorization", "content-type", "*", "Access-Control-Allow-Origin"],
+    allow_headers=["Authorization", "content-type", "Access-Control-Allow-Origin",  "*",],
 )
 
 app.include_router(auth.router)
