@@ -54,7 +54,6 @@ class SaleItem(BaseModel):
     unit: str
     price: float
     description: str
-    creator: Optional[str] = None
 
 class SaleItemOut(BaseModel):
     name: str

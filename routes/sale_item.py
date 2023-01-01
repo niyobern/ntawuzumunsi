@@ -6,7 +6,7 @@ from database.database import get_db
 from typing import Optional
 import datetime
 from typing import List
-router = APIRouter(prefix="/saleitem", tags=['Sale Items'])
+router = APIRouter(prefix="/sales", tags=['Sale Items'])
 
 @router.get('/', response_model=List[schemas.SaleItemOut])
 def get_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
