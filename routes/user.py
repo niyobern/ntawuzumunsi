@@ -34,6 +34,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @router.get('/current')
 def return_user(db: Session = Depends(get_db), user: schemas.User = Depends(oauth2.get_current_user)):
     return user
+@router.get('/')
+def return_get_all_users(db: Session = Depends(get_db), user: schemas.User = Depends(oauth2.get_current_user)):
+    users = db.query(models.User).all()
+    return users
 
 @router.patch('/{id}')
 def update_user(id: int, user: schemas.UserUpdate, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
