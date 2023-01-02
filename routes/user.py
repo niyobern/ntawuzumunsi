@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
-import datetime
+from typing import List
 
 router = APIRouter(
     prefix="/users",
@@ -45,19 +45,20 @@ def change_password(password_change: schemas.PasswordChange, user: schemas.User 
     if not utils.verify(user.password, password_change.current):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Current_password")
 
-@router.patch('/{id}')
-def update_user(id: int, user: schemas.UserUpdate, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+@router.patch('/')
+def update_user(users: List[schemas.UserUpdate], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value not in ("boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are unauthorised to do so") 
-    user_role = user.role.value
-    user.role = user_role
-    user_query = db.query(models.User).filter(models.User.id == id)
-    found_query = user_query.first()
-    if found_query == None:
-        raise HTTPException(status_code=status.HTTTP_403_FORBIDDEN, detail="Not Found")
-    user_query.update(user.dict(), synchronize_session=False)
-    db.commit()
-    return user
+    for user in users:
+        user_role = user.role.value
+        user.role = user_role
+        user_query = db.query(models.User).filter(models.User.id == id)
+        found_query = user_query.first()
+        if found_query == None:
+            raise HTTPException(status_code=status.HTTTP_403_FORBIDDEN, detail="Not Found")
+        user_query.update(user.dict(), synchronize_session=False)
+        db.commit()
+    return users
 
 
 
