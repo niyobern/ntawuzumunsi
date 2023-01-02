@@ -13,7 +13,7 @@ app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 
-origins = ["https://www.lavajavahouse.net", "https://lavajavahouse.net", "*", "http://localhost:3000", "https://main.d26swrhmlynfs.amplifyapp.com"]
+origins = ["https://www.lavajavahouse.net", "https://lavajavahouse.net", "*", "http://localhost:3000", "https://main.d2yic9lxsfg9sy.amplifyapp.com"]
 
 app.add_middleware(
     CORSMiddleware,
