@@ -8,7 +8,7 @@ from datetime import datetime
 from datetime import timedelta  
 from typing import List
 
-router = APIRouter(prefix="/sales", tags=['Sales'])
+router = APIRouter(prefix="/summary", tags=['Summary'])
 
 end = datetime.utcnow()
 start = end - timedelta(days=30)
