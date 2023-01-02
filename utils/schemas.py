@@ -82,3 +82,7 @@ class Eservice(BaseModel):
     name: str
     price: float
     description: Optional[str]
+
+class PasswordChange(BaseModel):
+    current: str
+    new: str
