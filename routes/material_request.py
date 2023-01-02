@@ -15,7 +15,11 @@ def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Dep
     if current_user.role.value not in ("kitchen", "store_keeper", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "No permission")
     requests = db.query(models.MaterialRequest).filter(models.MaterialRequest.created_at.between(start, end)).filter(models.MaterialRequest.tag.contains(search)).limit(limit).offset(skip).all()
-    return requests
+    requests_list = []
+    for request in requests:
+        requests_list.append(request)
+        item = {"Id": request.id, "Stock_id": request.stock_id, "Quantity": request.quantity, "Creator": request.creator.id, "Description": request.description, "accepted": request.accepted}       
+    return requests_list
 
 @router.get('/{id}')
 def get_a_request(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):

@@ -15,6 +15,9 @@ def get_products(db: Session = Depends(get_db), current_user: schemas.User = Dep
     if current_user.role.value not in ("kitchen", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Notallowed to do this")
     products = db.query(models.KitchenProduct).filter(models.KitchenProduct.created_at.between(start, end)).filter(models.KitchenProduct.name.contains(search)).limit(limit).offset(skip).all()
+    products_list = []
+    for product in products_list:
+        item = {"Id": product.id, "Product_id": product.item_id, "Quantity": product.quantity, "Creator": product.creator.id, "Description": product.description}
     return products
 
 @router.get('/{id}')

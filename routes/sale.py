@@ -15,7 +15,10 @@ def get_sales(db: Session = Depends(get_db), current_user : schemas.User =Depend
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "retailer"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Allowed to view this")
     sales = db.query(models.Sale).filter(models.Sale.created_at.between(start, end)).filter(models.Sale.tag.contains(search)).limit(limit).offset(skip).all()
-    return sales
+    sales_info = []
+    for sale in sales:
+        sales_info = {"Id": sale.id, "Product_id": sale.item_id, "Quantity": sale.quantity, "Creator": sale.creator.id, "tag"}
+    return sales_info
 
 
 @router.get('/{id}')
