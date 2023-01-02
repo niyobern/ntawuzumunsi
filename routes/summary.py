@@ -35,11 +35,23 @@ def get_summary(db: Session = Depends(get_db), current_user : schemas.User = Dep
         value = sum(values)
         results.append({"title": "Items Requested From Stock", "value1": f"{purchases_count} with {value} value", "value2": {"from": start, "end": end}})
     if current_user.role.value in ("manager", "boss", "deputy_boss", "store_keeper"):
-        purchases = db.query(models.MaterialRequest, models.StockItem).filter(models.StockItem.id == models.MaterialRequest.stock_id).filter(models.MaterialRequest.created_at.between(start, end)).all()
+        purchases = db.query(models.MaterialRequest, models.StockItem).filter(models.StockItem.id == models.MaterialRequest.stock_id).filter(models.MaterialRequest.created_at.between(start, end)).filter(models.MaterialRequest.accepted == True).all()
         purchases_count = len(purchases)
         values = [x.price for x in purchases]
         value = sum(values)
         results.append({"title": "Items Gone out of Stock", "value1": f"{purchases_count} with {value} value", "value2": {"from": start, "end": end}})
+    if current_user.role.value in ("manager", "boss", "deputy_boss"):
+        purchases = db.query(models.Cash).filter(models.Cash.amount > 0 ).filter(models.Cash.created_at.between(start, end)).all()
+        purchases_count = len(purchases)
+        values = [x.amount for x in purchases]
+        value = sum(values)
+        results.append({"title": "Transactions Returned Money", "value1": f"{purchases_count} with {value} total value", "value2": {"from": start, "end": end}})
+    if current_user.role.value in ("manager", "boss", "deputy_boss"):
+        purchases = db.query(models.Cash).filter(models.Cash.amount < 0 ).filter(models.Cash.created_at.between(start, end)).all()
+        purchases_count = len(purchases)
+        values = [x.amount for x in purchases]
+        value = sum(values)
+        results.append({"title": "Transactions Costed Money", "value1": f"{purchases_count} with {value} total value", "value2": {"from": start, "end": end}})
     return results
 
 
