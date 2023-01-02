@@ -36,9 +36,15 @@ def return_user(db: Session = Depends(get_db), user: schemas.User = Depends(oaut
     return user
     
 @router.get('/')
-def return_get_all_users(db: Session = Depends(get_db), user: schemas.User = Depends(oauth2.get_current_user)):
+def return_get_all_users(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    if current_user.role.value not in ("boss", "deputy_boss"):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
     users = db.query(models.User).all()
-    return users
+    users_info = []
+    for user in users:
+        info = {"Name": user.name, "email": user.email, "phone": user.phone, "role": user.role.value}
+        users_info.append(info)
+    return users_info
 
 @router.patch('/password/{id}')
 def change_password(password_change: schemas.PasswordChange, user: schemas.User = Depends(oauth2.get_current_user) ):
