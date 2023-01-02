@@ -6,7 +6,7 @@ from database import models
 from alembic import command
 from database.database import engine
 from utils.schemas import User
-from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product, material_request, eservice, cash, links
+from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product, material_request, eservice, cash, links, summary
 
 app = FastAPI()
 
@@ -34,6 +34,7 @@ app.include_router(material_request.router)
 app.include_router(eservice.router)
 app.include_router(cash.router)
 app.include_router(links.router)
+app.include_router(summary.router)
 
 
 @app.get('/')
