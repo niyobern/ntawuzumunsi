@@ -20,9 +20,7 @@ def get_items(db: Session = Depends(get_db), current_user: schemas.User = Depend
     items_info = []
     for item in items:
         created_time = str(item.created_at)
-        quantity_list = [item.sale.quantity]
-        quantity = sum(quantity_list)
-        info = {"id": item.id, "name": item.name, "price": item.price, "unit": item.price, "created_at": created_time[:10], "description": item.description, "amount": quantity}
+        info = {"id": item.id, "name": item.name, "price": item.price, "unit": item.price, "created_at": created_time[:10], "description": item.description}
         items_info.append(info)
     return items_info
 
