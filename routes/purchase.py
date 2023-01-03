@@ -24,6 +24,7 @@ def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User =
     for item in items:
         created_time = str(item.created_at)
         info = {"id": item.id, "stock_id": item.stock_id, "quantity": item.quantity, "created_at": created_time[:10], "tag": item.tag}
+        items_info.append(info)
     return items_info
 
 @router.get('/{id}')
