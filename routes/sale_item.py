@@ -17,7 +17,14 @@ def get_items(db: Session = Depends(get_db), current_user: schemas.User = Depend
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
     items = db.query(models.SaleItem).filter(models.SaleItem.created_at.between(start, end)).filter(models.SaleItem.name.contains(search)).limit(limit).offset(skip).all()
 
-    return items
+    items_info = []
+    for item in items:
+        created_time = str(item.created_at)
+        quantity_list = [item.sale.quantity]
+        quantity = sum(quantity_list)
+        info = {"id": item.id, "name": item.name, "price": item.price, "unit": item.price, "created_at": created_time[:10], "description": item.description, "amount": quantity}
+        items_info.append(info)
+    return items_info
 
 @router.get('/{id}')
 def get_item(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):

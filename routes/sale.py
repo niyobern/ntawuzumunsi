@@ -17,7 +17,8 @@ def get_sales(db: Session = Depends(get_db), current_user : schemas.User =Depend
     sales = db.query(models.Sale).filter(models.Sale.created_at.between(start, end)).filter(models.Sale.tag.contains(search)).limit(limit).offset(skip).all()
     sales_info = []
     for sale in sales:
-        sales_info = {"Id": sale.id, "Product_id": sale.item_id, "Quantity": sale.quantity, "Creator": sale.creator.id, "tag": sale.tag}
+        time = sale.created_at
+        sales_info = {"Id": sale.id, "Product_id": sale.item_id, "Quantity": sale.quantity, "Creator": sale.creator, "date": time[:10], "tag": sale.tag}
     return sales_info
 
 
