@@ -20,8 +20,11 @@ def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User =
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
     items = db.query(models.Requisition).filter(models.Requisition.created_at.between(start, end)).limit(limit).offset(skip).all()
-    # .filter(models.Requisition.tag.contains(search)).limit(limit).offset(skip).all()
-    return items
+    items_info = []
+    for item in items:
+        created_time = str(item.created_at)
+        info = {"id": item.id, "stock_id": item.stock_id, "quantity": item.quantity, "created_at": item.craeted_time[:10], "tag": item.tag}
+    return items_info
 
 @router.get('/{id}')
 def get_item(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
