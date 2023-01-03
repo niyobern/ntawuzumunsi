@@ -13,13 +13,13 @@ router = APIRouter(
 )
 
 @router.get('/')
-def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18 07:37:33", end: str = "2023-12-30 07:37:33",
-  limit: int = 10, skip: int = 10, search: Optional[str] = ""):
+def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18", end: str = "203-12-30",
+  limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    items = db.query(models.Requisition).limit(limit).offset(skip).all()
+    items = db.query(models.Requisition).filter(models.Requisition.created_at.between(start, end)).limit(limit).offset(skip).all()
     # .filter(models.Requisition.tag.contains(search)).limit(limit).offset(skip).all()
     return items
 
