@@ -54,7 +54,7 @@ def update_user(users: List[schemas.UserUpdate], db: Session = Depends(get_db), 
     for user in users:
         user_role = user.role.value
         user.role = user_role
-        user_query = db.query(models.User).filter(models.User.id == id)
+        user_query = db.query(models.User).filter(models.User.id == user.id)
         found_query = user_query.first()
         if found_query == None:
             raise HTTPException(status_code=status.HTTTP_403_FORBIDDEN, detail="Not Found")
