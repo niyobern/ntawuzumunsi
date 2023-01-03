@@ -30,9 +30,9 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
         quantity_removed_list = [x.quantity for x in removed]
         quantity_removed = sum(quantity_removed_list)
         quantity = quuantity_bought - quuantity_bought - quantity_removed
-        info = {"Stock_id": item.stockItem.id, "Price": item.StockItem.price, "Quantity": quantity, "Unit": item.StockItem.unit, "description": item.StockItem.description}
+        info = {"Stock_id": item.StockItem.id, "Price": item.StockItem.price, "Quantity": quantity, "Unit": item.StockItem.unit, "description": item.StockItem.description}
         items_info.append(info)
-    return items
+    return items_info
 
 @router.get('/{id}')
 def get_stock_item(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
