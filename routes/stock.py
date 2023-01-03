@@ -31,7 +31,8 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
         quantity_removed = sum(quantity_removed_list)
         quantity = quuantity_bought - quantity_removed
         info = {"Stock_id": item.StockItem.id, "Price": item.StockItem.price, "Quantity": quantity, "Unit": item.StockItem.unit, "description": item.StockItem.description}
-        items_info.append(info)
+        if not info in items_info:
+            items_info.append(info)
     return items_info
 
 @router.get('/{id}')
