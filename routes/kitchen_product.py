@@ -17,7 +17,7 @@ def get_products(db: Session = Depends(get_db), current_user: schemas.User = Dep
     products = db.query(models.KitchenProduct, models.SaleItem).filter(models.KitchenProduct.created_at.between(start, end)).filter(models.KitchenProduct.item_id == models.SaleItem.id).filter(models.SaleItem.name.contains(search)).limit(limit).offset(skip).all()
     products_list = []
     for product in products_list:
-        item = {"Id": product.id, "Product_id": product.item_id, "Quantity": product.quantity, "Creator": product.creator.id, "Description": product.description}
+        item = {"Id": product.id, "Product_id": product.item_id, "Quantity": product.quantity, "Creator": product.creator, "Description": product.description}
     return products
 
 @router.get('/{id}')

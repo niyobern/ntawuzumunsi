@@ -42,7 +42,7 @@ def return_get_all_users(db: Session = Depends(get_db), current_user: schemas.Us
     users = db.query(models.User).all()
     users_info = []
     for user in users:
-        info = {"Name": user.name, "email": user.email, "phone": user.phone, "role": user.role.value}
+        info = {"Name": user.name, "email": user.email, "phone": user.phone, "role": user.role.value, "id": user.id}
         users_info.append(info)
     return users_info
 
