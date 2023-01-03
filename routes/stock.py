@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 from database import models
 from utils import schemas, utils, oauth2
 from database.database import get_db
@@ -19,11 +20,16 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="you have no priviledge to view this")
     if current_user.role.value not in ("boss", "deputy_boss", "store_keeper", "manager"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
-    items = db.query(models.StockItem, models.Requisition).filter(models.Requisition.stock_id == models.StockItem.id).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).limit(limit).offset(skip).all()
-    # items_info = []
-    # for item in items:
-    #     info = {"Stock_id": item.id, "Price": item.price, "Quantity": item.quantity, "Unit": item.unit, "description": item.description}
-    #     items_info.append(info)
+    items = db.query(models.StockItem, models.Requisition).join(models.Requisition).filter(models.Requisition.stock_id == models.StockItem.id).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).limit(limit).offset(skip).all()
+    items_info = []
+    for item in items:
+        bought = db.query(models.Requisition).filter(models.Requisition.stock_id == item.Requisition.stock_id).all()
+        removed = db.query(models.MaterialRequest).filter(and_(models.MaterialRequest.stock_id == item.Requisition.stock_id, models.MaterialRequest.accepted == True)).all()
+        qauntity_bought_list = [x.quantity for x in bought]
+        quuantity_bought = sum(qauntity_bought_list)
+        quantity_removed_list = [x.quantity for x in removed]
+        info = {"Stock_id": item.stockItem.id, "Price": item.StockItem.price, "Quantity": item.Requisition.quantity, "Unit": item.StockItem.unit, "description": item.StockItem.description}
+        items_info.append(info)
     return items
 
 @router.get('/{id}')
