@@ -11,20 +11,23 @@ router = APIRouter(prefix="/links", tags=['Links'])
 @router.get('/')
 def get_links(db: Session = Depends(get_db), current_user : schemas.User =Depends(oauth2.get_current_user)):
     role = current_user.role.value
-    if role in ["manager", "boss", "deputy_boss"]:
-        links = ["purchases", "sales", "users", "stock", "products", "requests", "kitchen", "cash", "eservices"]
-        return links
-    elif role == "store_keeeper":
-        links = ["purchases", "stock", "requests"]
-        return links
+    if role == "no_role":
+        links = []
+        paths = []
+        return {"links": links, "paths": paths}
     elif role == "retailer":
-        links = ["sales", "products"]
-        return links
-    elif role == "eservices":
-        links = ["eservices"]
-        return links
-    elif role == "kitche":
-        links = ["kitchen, stock, products"]
-        return links
+        links = ["Products", "Sales"]
+        paths = ["/products", "/products/sales"]
+        return {"links": links, "paths": paths}
+    elif role == "kitchen":
+        links = ["Kitchen Products", "Material Requests", "Stock Items", "Products"]
+        paths = ["/kitchen/products", "/kitchen/requests", "/stock/items", "products"]
+        return {"links": links, "paths": paths}
+    elif role == "boss" or role == "deputy_boss":
+        paths = ["/kitchen/products", "/kitchen/requests", "/products", "/products/sales", "/stock", "/stock/items", "/stock/purchases", "/cash", "/users"];
+        links = ["Kitchen Products", "Material Requests", "Products", "Sales", "Stock", "Stock Items", "Purchases", "Cash", "Users"]
+        return {"links": links, "paths": paths}
     else:
-        return ["login"]
+        paths = ["/kitchen/products", "/kitchen/requests", "/products", "/products/sales", "/stock", "/stock/items", "/stock/purchases"];
+        links = ["Kitchen Products", "Material Requests", "Products", "Sales", "Stock", "Stock Items", "Purchases"]
+        return {"links": links, "paths": paths}
