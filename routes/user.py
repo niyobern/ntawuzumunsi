@@ -46,10 +46,6 @@ def return_get_all_users(db: Session = Depends(get_db), current_user: schemas.Us
         users_info.append(info)
     return users_info
 
-@router.patch('/password/{id}')
-def change_password(password_change: schemas.PasswordChange, user: schemas.User = Depends(oauth2.get_current_user) ):
-    if not utils.verify(user.password, password_change.current):
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Current_password")
 
 @router.patch('/')
 def update_user(users: List[schemas.UserUpdate], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
