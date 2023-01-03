@@ -29,7 +29,7 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
         quuantity_bought = sum(qauntity_bought_list)
         quantity_removed_list = [x.quantity for x in removed]
         quantity_removed = sum(quantity_removed_list)
-        quantity = quuantity_bought - quuantity_bought - quantity_removed
+        quantity = quuantity_bought - quantity_removed
         info = {"Stock_id": item.StockItem.id, "Price": item.StockItem.price, "Quantity": quantity, "Unit": item.StockItem.unit, "description": item.StockItem.description}
         items_info.append(info)
     return items_info
