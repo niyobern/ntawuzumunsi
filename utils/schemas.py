@@ -22,6 +22,7 @@ class User(BaseModel):
         orm_mode = True
 
 class UserUpdate(BaseModel):
+    id: str
     role: Role
 
 class UserCreate(BaseModel):
