@@ -23,7 +23,7 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
     items_info = []
     for item in items:
         item_info = {"id": item.id, "name": item.name, "unit": item.unit, "description": item.description}
-        items_info.append(items_info)
+        items_info.append(item_info)
     return items_info
 
 @router.get('/{id}')
