@@ -17,7 +17,8 @@ def get_sales(db: Session = Depends(get_db), current_user : schemas.User =Depend
     sales_info = []
     for sale in sales:
         time = str(sale.created_at)
-        sales_info = {"Id": sale.id, "Product_id": sale.item_id, "Quantity": sale.quantity, "Creator": sale.creator, "date": time[:10], "tag": sale.tag}
+        info = {"Id": sale.id, "Product_id": sale.item_id, "Quantity": sale.quantity, "Creator": sale.creator, "date": time[:10], "tag": sale.tag}
+        sales_info.appendappend(info)
     return sales_info
 
 
