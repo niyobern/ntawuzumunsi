@@ -64,7 +64,7 @@ class SaleItemOut(BaseModel):
 
 
 class Sale(BaseModel):
-    id: int
+    item_id: int
     quantiy: float
     tag: str
 
