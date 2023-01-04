@@ -17,7 +17,7 @@ def get_stock(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, sea
     items = db.query(models.StockItem).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).limit(limit).offset(skip).all()
     items_info = []
     for item in items:
-        item_info = {"id": item.id, "name": item.name, "unit": item.unit, "description": item.description}
+        item_info = {"id": item.id, "name": item.name, "price": item.price, "unit": item.unit, "description": item.description}
         items_info.append(item_info)
     return items_info
 
