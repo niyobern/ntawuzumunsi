@@ -24,7 +24,7 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
     items_info = []
     for item in items:
         bought = db.query(models.Requisition).filter(models.Requisition.stock_id == item.Requisition.stock_id).all()
-        removed = db.query(models.MaterialRequest).filter(models.MaterialRequest.stock_id == item.Requisition.stock_id).filter(models.MaterialRequest.accepted == True).all()
+        removed = db.query(models.StockDeprecation).filter(models.StockDeprecation.stock_id == item.Requisition.stock_id).all()
         qauntity_bought_list = [x.quantity for x in bought]
         quuantity_bought = sum(qauntity_bought_list)
         quantity_removed_list = [x.quantity for x in removed]

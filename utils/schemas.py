@@ -15,7 +15,7 @@ class Role(Enum):
 
 class User(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     phone: str
     role: Optional[Role]
     class Config:
@@ -24,10 +24,11 @@ class User(BaseModel):
 class UserUpdate(BaseModel):
     id: str
     role: Role
+    deleted: Optional[bool]
 
 class UserCreate(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     phone: str
     password: str
 

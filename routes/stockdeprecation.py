@@ -8,8 +8,8 @@ import datetime
 from typing import List
 
 router = APIRouter(
-    prefix="/purchase",
-    tags=['Purchase']
+    prefix="/stockdeprecation",
+    tags=['Stock Deprecation']
 )
 
 @router.get('/')
@@ -19,7 +19,7 @@ def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User =
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    items = db.query(models.Requisition).filter(models.Requisition.created_at.between(start, end)).limit(limit).offset(skip).all()
+    items = db.query(models.StockDeprecation).filter(models.StockDeprecation.created_at.between(start, end)).limit(limit).offset(skip).all()
     items_info = []
     for item in items:
         stock_item = db.query(models.StockItem).filter(models.StockItem.id == item.stock_id).first()
@@ -34,18 +34,18 @@ def get_item(id: int, db: Session = Depends(get_db), current_user: schemas.User 
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    item = db.query(models.Requisition).filter(models.Requisition.id == id).first()
+    item = db.query(models.StockDeprecation).filter(models.StockDeprecation.id == id).first()
     return item
 
 @router.post('/')
-def add_item(items : List[schemas.Requisition], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+def add_item(items : List[schemas.StockDeprecation], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
     
     for item in items:
-        new_item = models.Requisition(**item.dict(), creator=current_user.id)
+        new_item = models.StockDeprecation(**item.dict(), creator=current_user.id)
         db.add(new_item)
         db.commit()
         db.refresh(new_item)
@@ -62,12 +62,12 @@ def add_item(items : List[schemas.Requisition], db: Session = Depends(get_db), c
     return {"message": "created"}
 
 # @router.put('/{id}')
-# def update_item(id: int, item: schemas.Requisition, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+# def update_item(id: int, item: schemas.StockDeprecation, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
 #     if current_user.role.value == "no_role":
 #         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
 #     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
 #         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-#     item_query = db.query(models.Requisition).filter(models.Requisition.id == id)
+#     item_query = db.query(models.StockDeprecation).filter(models.StockDeprecation.id == id)
 #     item_found = item_query.first()
 #     item_query.update(**item.dict(), creator=current_user.id)
 #     return item_query.first()

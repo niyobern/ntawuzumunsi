@@ -17,7 +17,8 @@ def get_sales(db: Session = Depends(get_db), current_user : schemas.User =Depend
     sales_info = []
     for sale in sales:
         time = str(sale.created_at)
-        info = {"Id": sale.id, "Product_id": sale.item_id, "Quantity": sale.quantity, "Creator": sale.creator, "date": time[:10], "tag": sale.tag}
+        sale_item = db.query(models.SaleItem).filter(models.StockItem.id == sale.item_id).first()
+        info = {"Id": sale.id, "Product_id": sale_item.name, "Quantity": sale.quantity, "Creator": sale.creator, "date": time[:10], "tag": sale.tag}
         sales_info.append(info)
     return sales_info
 
