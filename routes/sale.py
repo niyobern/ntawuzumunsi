@@ -42,7 +42,7 @@ def add_sale(items: List[schemas.Sale], db: Session = Depends(get_db), current_u
         price_per_item = sale_item.price
         total_price = price_per_item * item.quantity
     
-        cash = models.Cash(label="sale_", amount=total_price, label_id = "sale_" + str(new_item.id), creator=current_user.id)
+        cash = models.Cash(label="sale", amount=total_price, label_id = "sale_" + str(new_item.id), creator=current_user.id)
         db.add(cash)
         db.commit()
         db.refresh(cash)
