@@ -9,12 +9,7 @@ from typing import List
 router = APIRouter(prefix="/saleitems", tags=['Sale Items'])
 
 @router.get('/')
-def get_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
-  limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
-    if current_user.role.value == "no_role":
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not allowed")
-    if current_user.role.value not in ("manager", "boss", "deputy_boss", "retailer"):
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
+def get_items(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     items = db.query(models.SaleItem).filter(models.SaleItem.created_at.between(start, end)).filter(models.SaleItem.name.contains(search)).limit(limit).offset(skip).all()
 
     items_info = []
