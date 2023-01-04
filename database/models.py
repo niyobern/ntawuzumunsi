@@ -42,6 +42,9 @@ class User(Base):
     phone = Column(String, nullable=False, unique=True)
     role = Column(Enum(Roles), nullable=False, server_default="no_role")
     password = Column(String, nullable=False)
+    deleted = Column(Boolean, nullable=False, server_default=False)
+    active = Column(Boolean, nullable=False, server_default=True)
+    activation_key = Column(String)
     stock_items = relationship("StockItem")
     requisitions = relationship("Requisition")
     sale_items = relationship("SaleItem")
@@ -54,6 +57,15 @@ class User(Base):
 
 class Requisition(Base):
     __tablename__ = "requisitions"
+    id = Column(Integer, primary_key=True, nullable=False)
+    stock_id = Column(Integer, ForeignKey("stock_items.id", ondelete="CASCADE"), nullable=False)
+    quantity = Column(Float, nullable=False)
+    creator = Column(ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
+    tag = Column(String)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+
+class StockDeprecation(Base):
+    __tablename__ = "stock_deprecation"
     id = Column(Integer, primary_key=True, nullable=False)
     stock_id = Column(Integer, ForeignKey("stock_items.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Float, nullable=False)

@@ -30,7 +30,7 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
         quantity_removed_list = [x.quantity for x in removed]
         quantity_removed = sum(quantity_removed_list)
         quantity = quuantity_bought - quantity_removed
-        info = {"Stock_id": item.StockItem.id, "Price": item.StockItem.price, "Quantity": quantity, "Unit": item.StockItem.unit, "description": item.StockItem.description}
+        info = {"Stock_id": item.StockItem.name, "Price": item.StockItem.price, "Quantity": quantity, "Unit": item.StockItem.unit, "description": item.StockItem.description}
         if not info in items_info:
             items_info.append(info)
     return items_info
