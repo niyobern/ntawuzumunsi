@@ -65,13 +65,13 @@ class SaleItemOut(BaseModel):
 
 class Sale(BaseModel):
     item_id: int
-    quantiy: float
-    tag: str
+    quantity: float
+    tag: Optional[str]
 
 class KitchenProduct(BaseModel):
     item_id: int
     quantity: float
-    description: str
+    description: Optional[str]
 
 class MaterialRequest(BaseModel):
     stock_id: int
