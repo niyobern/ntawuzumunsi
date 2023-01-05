@@ -24,7 +24,7 @@ class User(BaseModel):
 class UserUpdate(BaseModel):
     id: str
     role: Role
-    deleted: Optional[bool]
+    deleted: Optional[bool] = False
 
 class UserCreate(BaseModel):
     name: str
