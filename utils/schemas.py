@@ -43,19 +43,24 @@ class StockItem(BaseModel):
     name: str
     unit : str
     price: float
-    description: str
+    description: Optional[str]
 
 
 class Requisition(BaseModel):
     stock_id: int
     quantity: float
-    tag: str
+    tag: Optional[str]
+
+class StockDeprecation(BaseModel):
+    stock_id: int
+    quantity: float
+    tag: Optional[str]
 
 class SaleItem(BaseModel):
     name: str
     unit: str
     price: float
-    description: str
+    description: Optional[str]
 
 class SaleItemOut(BaseModel):
     name: str
@@ -77,7 +82,7 @@ class KitchenProduct(BaseModel):
 class MaterialRequest(BaseModel):
     stock_id: int
     quantity: float
-    tag: str
+    tag: Optional[str]
     accepted: Optional[str]
 
 class Eservice(BaseModel):
