@@ -80,5 +80,5 @@ async def send_file(
     title = "Purchases"
     await make_document(title, items_info, email)
 
-    return "Your report was sent"
+    return JSONResponse(status_code=200, content={"message": "Your report was sent to the provided email"})
 
