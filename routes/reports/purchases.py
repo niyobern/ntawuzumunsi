@@ -70,15 +70,15 @@ async def send_file(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    items = db.query(models.Requisition).limit(limit).offset(skip).all()
+    items = db.query(models.Requisition).filter(models.Sale.created_at.between(start, end)).limit(limit).offset(skip).all()
     items_info = []
     for item in items:
         stock_item = db.query(models.StockItem).filter(models.StockItem.id == item.stock_id).first()
         created_time = str(item.created_at)
-        info = {"id": item.id, "stock_id": stock_item.name, "quantity": item.quantity, "created_at": created_time[:10], "tag": item.tag}
+        info = {"ID": item.id, "Item Name": stock_item.name, "Quantity": item.quantity, "Date Created": created_time[:10], "Description": item.tag}
         items_info.append(info)
     title = "Purchases"
     await make_document(title, items_info, email)
 
-    return items_info
+    return "Your report was sent"
 
