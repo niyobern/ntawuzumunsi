@@ -26,7 +26,7 @@ conf = ConnectionConfig(
     VALIDATE_CERTS = True
 )
 
-router = APIRouter(prefix="/requests", tags=["Reports"])
+router = APIRouter(prefix="/reports/requests", tags=["Reports"])
 
 async def make_document(title, data, email):
     a = data[0]

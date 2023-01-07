@@ -26,7 +26,7 @@ conf = ConnectionConfig(
     VALIDATE_CERTS = True
 )
 
-router = APIRouter(prefix="/kitchen", tags=["Reports"])
+router = APIRouter(prefix="/reports/kitchen", tags=["Reports"])
 
 async def make_document(title, data, email):
     rows = len(data)
