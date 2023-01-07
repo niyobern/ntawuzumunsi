@@ -77,7 +77,7 @@ async def send_file(
         created_time = str(item.created_at)
         info = {"id": item.id, "stock_id": stock_item.name, "quantity": item.quantity, "created_at": created_time[:10], "tag": item.tag}
         items_info.append(info)
-    background_tasks.add_task(make_document,"Purchases",items_info,email)
+    background_tasks.add_task(make_document,"Purchases",items,email)
 
     return JSONResponse(status_code=200, content={"message": "Your report is being processed"})
 
