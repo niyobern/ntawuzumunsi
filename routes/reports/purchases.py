@@ -78,7 +78,7 @@ async def send_file(
         info = {"ID": item.id, "Item Name": stock_item.name, "Quantity": item.quantity, "Date Created": created_time[:10], "Time Created": created_time[11:19], "Description": item.tag}
         items_info.append(info)
     title = "Purchases"
-    await make_document(title, items_info, email)
+    await make_document(title, items_info, email.email)
 
     return JSONResponse(status_code=200, content={"message": "Your report was sent to the provided email"})
 
