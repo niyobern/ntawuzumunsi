@@ -10,7 +10,7 @@ from database.database import get_db
 from docx import Document
 
 class EmailSchema(BaseModel):
-    email: List[EmailStr]
+    email: str
 
 
 conf = ConnectionConfig(
