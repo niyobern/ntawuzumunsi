@@ -1,83 +1,72 @@
-# import boto3
-# from botocore.exceptions import ClientError
+from fastapi import FastAPI, BackgroundTasks, UploadFile, File, APIRouter
+from starlette.responses import JSONResponse
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
+from pydantic import EmailStr, BaseModel
+from typing import List
+from docx import Document
 
-# # Replace sender@example.com with your "From" address.
-# # This address must be verified with Amazon SES.
-# SENDER = "Sender Name lavajava18122022@gmail.com"
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
 
-# # Replace recipient@example.com with a "To" address. If your account 
-# # is still in the sandbox, this address must be verified.
-# RECIPIENT = "lavajava@gmail.com"
 
-# # Specify a configuration set. If you do not want to use a configuration
-# # set, comment the following variable, and the 
-# # ConfigurationSetName=CONFIGURATION_SET argument below.
-# # CONFIGURATION_SET = "ConfigSet"
+conf = ConnectionConfig(
+    MAIL_USERNAME = "AKIAY74ITD5OE3BRFNE3",
+    MAIL_PASSWORD = "BKEkY0Gr0522LV7vNWhcmk0cdrRlknCqpiSZ/2lOTBaG",
+    MAIL_FROM = "niyobern@icloud.com",
+    MAIL_PORT = 2587,
+    MAIL_SERVER = "email-smtp.us-east-2.amazonaws.com",
+    MAIL_FROM_NAME="Niyomugabo Bernard",
+    MAIL_STARTTLS = True,
+    MAIL_SSL_TLS = False,
+    USE_CREDENTIALS = True,
+    VALIDATE_CERTS = True
+)
 
-# # If necessary, replace us-west-2 with the AWS Region you're using for Amazon SES.
-# AWS_REGION = "us-east-1"
+router = APIRouter()
 
-# # The subject line for the email.
-# SUBJECT = "Monthly report"
+async def make_document(title, data, email):
+    rows = len(data)
+    a = data[0]
+    titles = [x for x in a.keys()]
+    colums = len(titles)
+    document = Document()
+    document.add_heading(title, 1)
+    table = document.add_table(rows=1, cols=colums)
+    header_cells = table.rows[0].cells
+    for i in range(len(header_cells)):
+        header_cells[i].text = titles[i]
+    for item in data:
+        row_cells = table.add_row().cells
+        values = [x for x in item.values()]
+        for index in range(len(titles)):
+            row_cells[index].text = str(values[index])
+    table.style = 'Colorful Grid Accent 1'
+    document.save("Report.docx")
+    filei = open("Report.docx", "rb")
+    file = UploadFile(filename="report.docx", file=filei)
+    message = MessageSchema(
+            subject=title,
+            recipients=[email],
+            body="Your Report",
+            subtype=MessageType.html,
+            attachments=[{"file": file}])
 
-# # The email body for recipients with non-HTML email clients.
-# BODY_TEXT = ("Amazon SES Test (Python)\r\n"
-#              "This email was sent with Amazon SES using the "
-#              "AWS SDK for Python (Boto)."
-#             )
-            
-# # The HTML body of the email.
-# BODY_HTML = """<html>
-# <head></head>
-# <body>
-#   <h1>Amazon SES Test (SDK for Python)</h1>
-#   <p>This email was sent with
-#     <a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the
-#     <a href='https://aws.amazon.com/sdk-for-python/'>
-#       AWS SDK for Python (Boto)</a>.</p>
-# </body>
-# </html>
-#             """            
+    fm = FastMail(conf)
 
-# # The character encoding for the email.
-# CHARSET = "UTF-8"
+    await fm.send_message(message)
+    filei.close()
+    return "done"
 
-# # Create a new SES resource and specify a region.
-# client = boto3.client('ses',region_name=AWS_REGION)
+@router.post("/")
+async def send_file(
+    background_tasks: BackgroundTasks,
+    email:EmailStr = Form(...),
+    ) -> JSONResponse:
+    title = "Bank Statement"
+    data = [{"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}, {"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123},{"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}, {"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}, {"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}, {"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}, {"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123},{"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}, {"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}, {"january": 200, "February": 405, "March": 2436, "June": 234, "September": 123}]
+    
+    background_tasks.add_task(make_document,title,data,email)
 
-# # Try to send the email.
-# try:
-#     #Provide the contents of the email.
-#     response = client.send_email(
-#         Destination={
-#             'ToAddresses': [
-#                 RECIPIENT,
-#             ],
-#         },
-#         Message={
-#             'Body': {
-#                 'Html': {
-#                     'Charset': CHARSET,
-#                     'Data': BODY_HTML,
-#                 },
-#                 'Text': {
-#                     'Charset': CHARSET,
-#                     'Data': BODY_TEXT,
-#                 },
-#             },
-#             'Subject': {
-#                 'Charset': CHARSET,
-#                 'Data': SUBJECT,
-#             },
-#         },
-#         Source=SENDER,
-#         # If you are not using a configuration set, comment or delete the
-#         # following line
-#         # ConfigurationSetName=CONFIGURATION_SET,
-#     )
-# # Display an error if something goes wrong.	
-# except ClientError as e:
-#     print(e.response['Error']['Message'])
-# else:
-#     print("Email sent! Message ID:"),
-#     print(response['MessageId'])
+
+    return JSONResponse(status_code=200, content={"message": "Your report is being processed"})
+
