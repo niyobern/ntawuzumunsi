@@ -80,5 +80,5 @@ def send_file(
     title = "Purchases"
     make_document(title, items_info, email)
 
-    return JSONResponse(status_code=200, content={"message": "Your report is being processed"})
+    return JSONResponse(status_code=200, content={"message": "Your report was sent"})
 
