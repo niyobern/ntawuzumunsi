@@ -61,7 +61,7 @@ async def make_document(title, data, email):
     return "done"
 
 @router.post("/")
-def send_file(
+async def send_file(
     background_tasks: BackgroundTasks,
     email:EmailStr,db: Session = Depends(get_db), current_user: schemas.User = Depends(
     oauth2.get_current_user), limit: int = 100, skip: int = 0, start: str = "2022-12-18", end: str = "2023-12-30"
@@ -78,7 +78,7 @@ def send_file(
         info = {"id": item.id, "stock_id": stock_item.name, "quantity": item.quantity, "created_at": created_time[:10], "tag": item.tag}
         items_info.append(info)
     title = "Purchases"
-    make_document(title, items_info, email)
+    await make_document(title, items_info, email)
 
     return items_info
 
