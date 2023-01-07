@@ -75,7 +75,7 @@ async def send_file(
     for item in items:
         stock_item = db.query(models.StockItem).filter(models.StockItem.id == item.stock_id).first()
         created_time = str(item.created_at)
-        info = {"ID": item.id, "Item Name": stock_item.name, "Quantity": item.quantity, "Date Created": created_time[:10], "Description": item.tag}
+        info = {"ID": item.id, "Item Name": stock_item.name, "Quantity": item.quantity, "Date Created": created_time[:10], "Time Created": created_time[11:19], "Description": item.tag}
         items_info.append(info)
     title = "Purchases"
     await make_document(title, items_info, email)
