@@ -1,4 +1,4 @@
-from fastapi import FastAPI, BackgroundTasks, UploadFile, File, APIRouter
+from fastapi import FastAPI, BackgroundTasks, UploadFile, File, Form, APIRouter
 from starlette.responses import JSONResponse
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from pydantic import EmailStr, BaseModel
