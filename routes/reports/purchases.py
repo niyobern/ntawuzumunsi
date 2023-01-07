@@ -61,7 +61,7 @@ async def make_document(title, data, email):
     return "done"
 
 @router.post("/")
-async def send_file(
+def send_file(
     background_tasks: BackgroundTasks,
     email:EmailStr,db: Session = Depends(get_db), current_user: schemas.User = Depends(
     oauth2.get_current_user), limit: int = 100, skip: int = 100, start: str = "2022-12-18", end: str = "2022-12-30"
@@ -70,7 +70,7 @@ async def send_file(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    items = await db.query(models.Requisition).filter(models.Requisition.created_at.between(start, end)).limit(limit).offset(skip).all()
+    items = db.query(models.Requisition).filter(models.Requisition.created_at.between(start, end)).limit(limit).offset(skip).all()
     items_info = []
     for item in items:
         stock_item = db.query(models.StockItem).filter(models.StockItem.id == item.stock_id).first()
