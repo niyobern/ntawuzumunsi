@@ -64,7 +64,7 @@ async def make_document(title, data, email):
 @router.post("/")
 async def send_file(
     background_tasks: BackgroundTasks,
-    email:EmailStr, db: Session = Depends(get_db), current_user: schemas.User = Depends(
+    email:EmailSchema, db: Session = Depends(get_db), current_user: schemas.User = Depends(
     oauth2.get_current_user), limit: int = 100, skip: int = 100, start: str = "2022-12-18", end: str = "2023-12-30"
     ) -> JSONResponse:
     if current_user.role.value not in ("manager", "boss", "deputy_boss"):
