@@ -9,7 +9,7 @@ router = APIRouter(prefix='/cash', tags=["Cash"])
 
 @router.get('/all')
 def get_transactions(db: Session = Depends(get_db), current_user: schemas.User = Depends(
-    oauth2.get_current_user), limit: int = 100, skip: int = 100, start: str = "2022-12-18", end: str = "2023-12-30"):
+    oauth2.get_current_user), limit: int = 100, skip: int = 0, start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value not in ("manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
     cashflow = db.query(models.Cash).filter(models.Cash.created_at.between(start, end)).limit(limit).offset(skip).all()
