@@ -82,7 +82,7 @@ async def send_file(
         if item.label.value != "purchase":
             income += item.amount
         else: expenditures += item.amount
-    summary = {"Income": income, "Expenditure": expenditures}
+    summary = [{"Income": income, "Expenditure": expenditures}]
     background_tasks.add_task(make_document, "Summary",summary,email.email)
     background_tasks.add_task(make_document,"Cashflow",items_info,email.email)
 
