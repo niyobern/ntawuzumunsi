@@ -19,7 +19,7 @@ def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User =
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not enough priviledge")
-    items = db.query(models.Requisition).filter(models.Requisition.created_at.between(start, end)).limit(limit).offset(skip).all()
+    items = db.query(models.Requisition).filter(models.Requisition.created_at.between(start, end)).limit(limit).offset(skip).order_by(models.Cash.created_at.desc()).all()
     items_info = []
     for item in items:
         stock_item = db.query(models.StockItem).filter(models.StockItem.id == item.stock_id).first()

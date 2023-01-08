@@ -14,7 +14,7 @@ router = APIRouter(
 
 @router.get('/')
 def get_stock(db: Session = Depends(get_db), limit: int = 100, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
-    items = db.query(models.StockItem).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).limit(limit).offset(skip).all()
+    items = db.query(models.StockItem).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).limit(limit).offset(skip).order_by(models.Cash.created_at.desc()).all()
     items_info = []
     for item in items:
         item_info = {"id": item.id, "name": item.name, "price": item.price, "unit": item.unit, "description": item.description}

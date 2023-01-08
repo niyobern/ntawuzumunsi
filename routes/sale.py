@@ -13,7 +13,7 @@ def get_sales(db: Session = Depends(get_db), current_user : schemas.User =Depend
   limit: int = 100, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-18"):
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "retailer"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Allowed to view this")
-    sales = db.query(models.Sale).filter(models.Sale.created_at.between(start, end)).filter(models.Sale.tag.contains(search)).limit(limit).offset(skip).all()
+    sales = db.query(models.Sale).filter(models.Sale.created_at.between(start, end)).filter(models.Sale.tag.contains(search)).limit(limit).offset(skip).order_by(models.Cash.created_at.desc()).all()
     sales_info = []
     for sale in sales:
         time = str(sale.created_at)
