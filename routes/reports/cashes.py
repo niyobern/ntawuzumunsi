@@ -72,14 +72,19 @@ async def send_file(
     cashflow = db.query(models.Cash).filter(models.Cash.created_at.between(start, end)).limit(limit).offset(skip).all()
     income = 0
     expenditures = 0
+    items_info = []
     for item in cashflow:
         creator = db.query(models.User).filter(models.User.id == item.creator).first()
         item.creator = creator.name.split()[0]
-        item.dict()
+        created_at = str(item.ctreated_at)
+        info = {"Amount": item.amount, "Creator": item.creator, "Label": item.label, "Date": created_at[:10], "Time": created_at[11, 19]}
+        items_info.append(info)
         if item.label.value != "purchase":
             income += item.amount
         else: expenditures += item.amount
-    background_tasks.add_task(make_document,"Cashflow",cashflow,email.email)
+    summary = {"Income": income, "Expenditure": expenditures}
+    background_tasks.add_task(make_document, "Summary", summary, email.email)
+    background_tasks.add_task(make_document,"Cashflow",items_info,email.email)
 
 
     return JSONResponse(status_code=200, content={"message": "Your report is being processed"})
