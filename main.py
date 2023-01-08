@@ -6,7 +6,7 @@ from database import models
 from alembic import command
 from database.database import engine
 from utils.schemas import User
-from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product, material_request, eservice, cash, links, summary, stock, stockdeprecation
+from routes import user, auth, stock_item, purchase, sale_item, sale, kitchen_product, material_request, eservice, cash, links, summary, stock, stockdeprecations
 from routes.reports import cash, kitchen, material_requests, purchases, sales, stockdeprecation
 
 app = FastAPI()
@@ -37,7 +37,7 @@ app.include_router(cash.router)
 app.include_router(stock.router)
 app.include_router(links.router)
 app.include_router(summary.router)
-app.include_router(stockdeprecation.router)
+app.include_router(stockdeprecations.router)
 app.include_router(cash.router)
 app.include_router(kitchen.router)
 app.include_router(material_requests.router)
