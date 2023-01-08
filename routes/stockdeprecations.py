@@ -49,15 +49,6 @@ def add_item(items : List[schemas.StockDeprecation], db: Session = Depends(get_d
         db.add(new_item)
         db.commit()
         db.refresh(new_item)
-    
-        stock_item = db.query(models.StockItem).filter(models.StockItem.id == item.stock_id).first()
-        price_per_item = stock_item.price
-        total_price = price_per_item * item.quantity
-    
-        cash = models.Cash(label="purchase", amount=total_price*(-1), label_id = "purchase" + str(new_item.id), creator=current_user.id)
-        db.add(cash)
-        db.commit()
-        db.refresh(cash)
 
     return {"message": "created"}
 
