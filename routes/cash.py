@@ -16,6 +16,7 @@ def get_transactions(db: Session = Depends(get_db), current_user: schemas.User =
     income = 0
     expenditures = 0
     for item in cashflow:
+        item.creator = "Bernard"
         if item.label.value != "purchase":
             income += item.amount
         else: expenditures += item.amount

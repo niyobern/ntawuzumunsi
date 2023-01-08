@@ -14,7 +14,7 @@ router = APIRouter(
 
 @router.get('/')
 def get_requisitions(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), start: str = "2022-12-18", end: str = "2023-12-30",
-  limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+  limit: int = 100, skip: int = 0, search: Optional[str] = ""):
     if current_user.role.value == "no_role":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     if current_user.role.value not in ("manager", "boss", "deputy_boss", "store_keeper"):
