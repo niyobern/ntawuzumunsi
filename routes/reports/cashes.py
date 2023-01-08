@@ -76,8 +76,8 @@ async def send_file(
         if item.label.value != "purchase":
             income += item.amount
         else: expenditures += item.amount
-    background_tasks.add_task(make_document,"Cashflow",cashflow,email)
-    background_tasks.add_task(make_document,"Income",income,email)
+    background_tasks.add_task(make_document,"Cashflow",cashflow,email.email)
+    background_tasks.add_task(make_document,"Income",income,email.email)
     background_tasks.add_task(make_document,"Exipenditures",expenditures,email.email)
 
 
