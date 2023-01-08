@@ -12,7 +12,7 @@ router = APIRouter(prefix='/eservices', tags=["E-Services"])
 def get_services(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), limit: int = 100, skip: int = 10, start: str = "2022-12-18", end: str = datetime.datetime.now().date()):
     if current_user.role.value not in ("manager", "boss", "eservices"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
-    services = db.query(models.Eservice).filter(models.Eservice.created_at.between(start, end)).order_by(models.Cash.created_at.desc()).limit(limit).offset(skip).all()
+    services = db.query(models.Eservice).filter(models.Eservice.created_at.between(start, end)).order_by(models.Eservice.created_at.desc()).limit(limit).offset(skip).all()
     return services
 
 @router.post('/')

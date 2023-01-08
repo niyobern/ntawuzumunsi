@@ -20,7 +20,7 @@ def get_stock(db: Session = Depends(get_db), current_user: schemas.User = Depend
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="you have no priviledge to view this")
     if current_user.role.value not in ("boss", "deputy_boss", "store_keeper", "manager"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
-    items = db.query(models.StockItem, models.Requisition).join(models.Requisition).filter(models.Requisition.stock_id == models.StockItem.id).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).order_by(models.Cash.created_at.desc()).limit(limit).offset(skip).all()
+    items = db.query(models.StockItem, models.Requisition).join(models.Requisition).filter(models.Requisition.stock_id == models.StockItem.id).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).order_by(models.Requisition.created_at.desc()).limit(limit).offset(skip).all()
     items_info = []
     for item in items:
         bought = db.query(models.Requisition).filter(models.Requisition.stock_id == item.Requisition.stock_id).all()

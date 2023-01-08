@@ -14,7 +14,7 @@ def get_products(db: Session = Depends(get_db), current_user: schemas.User = Dep
  limit: int = 100, skip: int = 10, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value not in ("kitchen", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Notallowed to do this")
-    products = db.query(models.KitchenProduct, models.SaleItem).filter(models.KitchenProduct.created_at.between(start, end)).filter(models.KitchenProduct.item_id == models.SaleItem.id).filter(models.SaleItem.name.contains(search)).order_by(models.Cash.created_at.desc()).limit(limit).offset(skip).all()
+    products = db.query(models.KitchenProduct, models.SaleItem).filter(models.KitchenProduct.created_at.between(start, end)).filter(models.KitchenProduct.item_id == models.SaleItem.id).filter(models.SaleItem.name.contains(search)).order_by(models.KitchenProduct.created_at.desc()).limit(limit).offset(skip).all()
     products_list = []
     for product in products_list:
         item = {"Id": product.KitchenProduct.id, "Product_id": product.SaleItem.name, "Quantity": product.KitchenProduct.quantity, "Creator": product.KitchenProduct.creator, "Description": product.KitchenProduct.description}
