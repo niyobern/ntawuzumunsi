@@ -77,12 +77,12 @@ async def send_file(
         creator = db.query(models.User).filter(models.User.id == item.creator).first()
         item.creator = creator.name.split()[0]
         created_at = str(item.created_at)
-        info = {"Amount": item.amount, "Creator": item.creator, "Label": item.label, "Date": created_at[:10], "Time": created_at[11:19]}
+        info = {"Id": item.id,"Amount": item.amount, "Creator": item.creator, "Label": item.label.value, "Date": created_at[:10], "Time": created_at[11:19]}
         items_info.append(info)
         if item.label.value != "purchase":
             income += item.amount
         else: expenditures += item.amount
-    summary = [{"Income": income, "Expenditure": expenditures}]
+    summary = [{"Balance": income - expenditures,"Income": income, "Expenditure": expenditures}]
     background_tasks.add_task(make_document, "Summary",summary,email.email)
     background_tasks.add_task(make_document,"Cashflow",items_info,email.email)
 
