@@ -50,5 +50,5 @@ def add_sale(items: List[schemas.Sale], db: Session = Depends(get_db), current_u
         db.commit()
         db.refresh(cash)
 
-    return {"message": "created"}
+    return {"message": "Succesfully Created"}
 

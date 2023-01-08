@@ -10,7 +10,7 @@ from database.database import get_db
 from docx import Document
 
 class EmailSchema(BaseModel):
-    email: List[EmailStr]
+    email: EmailStr
 
 
 conf = ConnectionConfig(
@@ -74,7 +74,7 @@ async def send_file(
     for product in products_list:
         item = {"Id": product.id, "Product_id": product.item_id, "Quantity": product.quantity, "Creator": product.creator, "Description": product.description}
         products_list.append(item)
-    background_tasks.add_task(make_document,"Kitchen",products_list,email)
+    background_tasks.add_task(make_document,"Kitchen",products_list,email.email)
 
     return JSONResponse(status_code=200, content={"message": "Your report is being processed"})
 

@@ -41,7 +41,7 @@ def add_item(items: List[schemas.SaleItem], db: Session = Depends(get_db), curre
         db.add(new_item)
         db.commit()
         db.refresh(new_item)
-    return {"message": "created"}
+    return {"message": "Succesfully Created"}
 
 @router.patch('/{id}')
 def update_item(id: int, item: schemas.SaleItem, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):

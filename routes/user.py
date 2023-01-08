@@ -60,7 +60,7 @@ def update_user(users: List[schemas.UserUpdate], db: Session = Depends(get_db), 
             raise HTTPException(status_code=status.HTTTP_403_FORBIDDEN, detail="Not Found")
         user_query.update(user.dict(), synchronize_session=False)
         db.commit()
-    return users
+    return {"message": "Updated"}
 
 
 
