@@ -65,7 +65,7 @@ async def make_document(title, data, email):
 async def send_file(
     background_tasks: BackgroundTasks,
     email:EmailSchema, db: Session = Depends(get_db), current_user: schemas.User = Depends(
-    oauth2.get_current_user), limit: int = 100, skip: int = 100, start: str = "2022-12-18", end: str = "2022-13-30"
+    oauth2.get_current_user), limit: int = 100, skip: int = 0, start: str = "2022-12-18", end: str = "2023-13-30"
     ) -> JSONResponse:
     if current_user.role.value not in ("kitchen", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Notallowed to do this")
