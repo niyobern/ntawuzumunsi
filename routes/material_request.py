@@ -14,7 +14,7 @@ def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Dep
   limit: int = 100, skip: int = 10, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value not in ("kitchen", "store_keeper", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "No permission")
-    requests = db.query(models.MaterialRequest).filter(models.MaterialRequest.accepted == None).filter(models.MaterialRequest.created_at.between(start, end)).filter(models.MaterialRequest.tag.contains(search)).limit(limit).offset(skip).order_by(models.Cash.created_at.desc()).all()
+    requests = db.query(models.MaterialRequest).filter(models.MaterialRequest.accepted == None).filter(models.MaterialRequest.created_at.between(start, end)).filter(models.MaterialRequest.tag.contains(search)).order_by(models.Cash.created_at.desc()).limit(limit).offset(skip).all()
     requests_list = []
     for request in requests:
         item = {"Id": request.id, "Stock_id": request.stock_id, "Quantity": request.quantity, "Creator": request.creator.id, "Description": request.description, "accepted": request.accepted}       

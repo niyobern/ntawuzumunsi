@@ -10,7 +10,7 @@ router = APIRouter(prefix="/saleitems", tags=['Sale Items'])
 
 @router.get('/')
 def get_items(db: Session = Depends(get_db), limit: int = 100, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
-    items = db.query(models.SaleItem).filter(models.SaleItem.created_at.between(start, end)).filter(models.SaleItem.name.contains(search)).limit(limit).offset(skip).order_by(models.Cash.created_at.desc()).all()
+    items = db.query(models.SaleItem).filter(models.SaleItem.created_at.between(start, end)).filter(models.SaleItem.name.contains(search)).order_by(models.Cash.created_at.desc()).limit(limit).offset(skip).all()
 
     items_info = []
     for item in items:
