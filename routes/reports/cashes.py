@@ -77,7 +77,7 @@ async def send_file(
         creator = db.query(models.User).filter(models.User.id == item.creator).first()
         item.creator = creator.name.split()[0]
         created_at = str(item.created_at)
-        info = {"Amount": item.amount, "Creator": item.creator, "Label": item.label, "Date": created_at[:10], "Time": created_at[11, 19]}
+        info = {"Amount": item.amount, "Creator": item.creator, "Label": item.label, "Date": created_at[:10], "Time": created_at[11:19]}
         items_info.append(info)
         if item.label.value != "purchase":
             income += item.amount
