@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 @router.get('/')
-def get_stock(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
+def get_stock(db: Session = Depends(get_db), limit: int = 100, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     items = db.query(models.StockItem).filter(models.StockItem.created_at.between(start, end)).filter(models.StockItem.name.contains(search)).limit(limit).offset(skip).all()
     items_info = []
     for item in items:
