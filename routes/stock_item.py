@@ -54,7 +54,7 @@ def update_item(id: int, item: schemas.StockItem, db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
     if found_item.requisitions or found_item.material_request:
         raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail="can't be modified")
-    itmeupdated = item.dic()
+    itmeupdated = item.dict()
     itmeupdated["creator"] = current_user.id
     item_query.update(itmeupdated, synchronize_session=False) 
     db.commit()  

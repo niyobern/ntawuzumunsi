@@ -1,5 +1,6 @@
 __pycache__
 env/
+lavajava_new/
 # .env
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
