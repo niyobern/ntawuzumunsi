@@ -122,6 +122,16 @@ class MaterialRequest(Base):
     accepted = Column(Boolean)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
+class Commande(Base):
+    __tablename__ = "commands"
+    id = Column(Integer, primary_key=True, nullable=False)
+    item_id = Column(ForeignKey("sale_items.id", ondelete="CASCADE"), nullable=False)
+    quantity = Column(Float, nullable=False)
+    creator = Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    tag = Column(String)
+    accepted = Column(Boolean)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+
 class Cash(Base):
     __tablename__ = "cash"
     id = Column(Integer, primary_key=True, nullable=False)
