@@ -85,6 +85,12 @@ class MaterialRequest(BaseModel):
     tag: Optional[str]
     accepted: Optional[str]
 
+class Commande(BaseModel):
+    item_id: int
+    quantity: float
+    tag: Optional[str]
+    accepted: Optional[str]
+
 class Eservice(BaseModel):
     name: str
     price: float
