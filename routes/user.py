@@ -49,7 +49,7 @@ def return_get_all_users(db: Session = Depends(get_db), current_user: schemas.Us
 
 @router.patch('/')
 def update_user(users: List[schemas.UserUpdate], db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
-    if current_user.role.value not in ("boss", "deputy_boss", "no_role"):
+    if current_user.role.value not in ("boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="you are unauthorised to do so") 
     for user in users:
         user_role = user.role.value
