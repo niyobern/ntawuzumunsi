@@ -16,15 +16,15 @@ def get_links(db: Session = Depends(get_db), current_user : schemas.User =Depend
         paths = []
         return {"links": links, "paths": paths}
     elif role == "retailer":
-        links = ["Products", "Sales"]
-        paths = ["/products", "/products/sales"]
+        links = ["Products", "Sales", "Commande"]
+        paths = ["/products", "/products/sales", "/kitchen/commande"]
         return {"links": links, "paths": paths}
     elif role == "kitchen":
-        links = ["Kitchen Products", "Material Requests", "Stock Items", "Products"]
-        paths = ["/kitchen/products", "/kitchen/requests", "/stock/items", "products"]
+        links = ["Kitchen Products", "Material Requests", "Stock Items", "Products", "Commande"]
+        paths = ["/kitchen/products", "/kitchen/requests", "/stock/items", "products", "/kitchen/commande"]
         return {"links": links, "paths": paths}
     elif role == "boss" or role == "deputy_boss":
-        paths = ["/kitchen/products", "/kitchen/requests", "/products", "/products/sales", "/stock", "/stock/items", "/stock/purchases", "/stock/deprecation", "/cash", "/users"];
+        paths = ["/kitchen/products", "/kitchen/requests", "/products", "/products/sales", "/stock", "/stock/items", "/stock/purchases", "/stock/deprecation", "/cash", "/users"]
         links = ["Kitchen Products", "Material Requests", "Products", "Sales", "Stock", "Stock Items", "Purchases", "Stock Deprecation", "Cash", "Users"]
         return {"links": links, "paths": paths}
     else:
