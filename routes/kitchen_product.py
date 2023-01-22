@@ -11,7 +11,7 @@ router = APIRouter(prefix="/kitchen", tags=["Kitchen Products"])
 
 @router.get('/')
 def get_products(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user),
- limit: int = 100, skip: int = 10, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
+ limit: int = 100, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value not in ("kitchen", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Notallowed to do this")
     products = db.query(models.KitchenProduct, models.SaleItem).filter(models.KitchenProduct.created_at.between(start, end)).filter(models.KitchenProduct.item_id == models.SaleItem.id).filter(models.SaleItem.name.contains(search)).order_by(models.KitchenProduct.created_at.desc()).limit(limit).offset(skip).all()

@@ -11,7 +11,7 @@ router = APIRouter(prefix="/commande", tags=["Kitchen Commands"])
 
 @router.get('/')
 def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user), 
-  limit: int = 100, skip: int = 10, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
+  limit: int = 100, skip: int = 0, search: Optional[str] = "", start: str = "2022-12-18", end: str = "2023-12-30"):
     if current_user.role.value not in ("kitchen", "retailer", "manager", "boss", "deputy_boss"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "No permission")
     requests = db.query(models.Commande).filter(models.Commande.accepted == None).filter(models.Commande.created_at.between(start, end)).filter(models.Commande.tag.contains(search)).order_by(models.Commande.created_at.desc()).limit(limit).offset(skip).all()
