@@ -18,7 +18,8 @@ def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Dep
     requests_list = []
     for request in requests:
         creator = db.query(models.User).filter(models.User.id == request.creator).first()
-        item = {"Id": request.id, "Stock_id": request.stock_id, "Quantity": request.quantity, "Creator": creator.name, "Description": request.tag, "accepted": request.accepted}       
+        material = db.query(models.StockItem).filter(models.StockItem.id == request.item_id).first()
+        item = {"Id": request.id, "item_id": material.name, "Quantity": request.quantity, "Creator": creator.name, "accepted": request.accepted} 
         requests_list.append(item)
     return requests_list
 
