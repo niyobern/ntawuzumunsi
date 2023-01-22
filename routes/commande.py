@@ -17,7 +17,8 @@ def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Dep
     requests = db.query(models.Commande).filter(models.Commande.accepted == None).filter(models.Commande.created_at.between(start, end)).filter(models.Commande.tag.contains(search)).order_by(models.Commande.created_at.desc()).limit(limit).offset(skip).all()
     requests_list = []
     for request in requests:
-        item = {"Id": request.id, "item_id": request.item_id, "Quantity": request.quantity, "Creator": request.creator.id, "Description": request.description, "accepted": request.accepted}       
+        creator = db.query(models.User).filter(models.User.id == request.creator).first()
+        item = {"Id": request.id, "item_id": request.item_id, "Quantity": request.quantity, "Creator": creator.name, "Description": request.description, "accepted": request.accepted}       
         requests_list.append(item)
     return requests_list
 
