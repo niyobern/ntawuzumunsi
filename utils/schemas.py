@@ -83,13 +83,13 @@ class MaterialRequest(BaseModel):
     stock_id: int
     quantity: float
     tag: Optional[str]
-    accepted: Optional[str]
+    accepted: Optional[bool]
 
 class Commande(BaseModel):
     item_id: int
     quantity: float
     tag: Optional[str]
-    accepted: Optional[str]
+    accepted: Optional[bool]
 
 class Eservice(BaseModel):
     name: str
