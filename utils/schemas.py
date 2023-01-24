@@ -97,5 +97,5 @@ class Eservice(BaseModel):
     description: Optional[str]
 
 class PasswordChange(BaseModel):
-    current: str
-    new: str
+    current_password: str
+    password: str

@@ -62,6 +62,16 @@ def update_user(users: List[schemas.UserUpdate], db: Session = Depends(get_db), 
         db.commit()
     return {"message": "Updated"}
 
+@router.patch("/password")
+def change_password(password_change: schemas.PasswordChange, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    if not utils.verify(password_change.current_password, current_user.password):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Password")
+    new_password = utils.hash(password_change.password)
+    fetch = db.query(models.User).filter(models.User.id == current_user.id)
+    fetch.update({"password": new_password})
+    db.commit()
+    return {"message": 'Succesfully Changed'}
 
 
 @router.get('/{id}')
