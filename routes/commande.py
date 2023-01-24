@@ -17,14 +17,10 @@ def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Dep
     requests = db.query(models.Commande).filter(models.Commande.accepted == None).filter(models.Commande.created_at.between(start, end)).filter(models.Commande.tag.contains(search)).order_by(models.Commande.created_at.desc()).limit(limit).offset(skip).all()
     requests_list = []
     for request in requests:
-<<<<<<< HEAD
         creator = db.query(models.User).filter(models.User.id == request.creator).first()
         item = db.query(models.SaleItem).filter(models.SaleItem.id == request.item_id).first()
-        item = {"Id": request.id, "item_id": item.name, "Quantity": request.quantity, "Creator": creator.name, "accepted": request.accepted}       
-=======
-        item = {"Id": request.id, "item_id": request.item_id, "Quantity": request.quantity, "Creator": request.creator.id, "Description": request.tag, "accepted": request.accepted}       
->>>>>>> 43322b161c52d2ea85b761a24e8088cee6cbbbc2
-        requests_list.append(item)
+        item_out = {"Id": request.id, "item_id": item.name, "Quantity": request.quantity, "Creator": creator.name, "accepted": request.accepted}       
+        requests_list.append(item_out)
     return requests_list
 
 @router.get('/{id}')
