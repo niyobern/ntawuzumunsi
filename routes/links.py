@@ -28,6 +28,6 @@ def get_links(db: Session = Depends(get_db), current_user : schemas.User =Depend
         links = ["Kitchen Products", "Material Requests", "Products", "Sales", "Stock", "Stock Items", "Purchases", "Commande", "Cash", "Users"]
         return {"links": links, "paths": paths}
     else:
-        paths = ["/kitchen/products", "/kitchen/requests", "/products", "/products/sales", "/stock", "/stock/items", "/stock/purchases", "/stock/deprecation"];
+        paths = ["/kitchen/products", "/kitchen/requests", "/products", "/products/sales", "/stock", "/stock/items", "/stock/purchases", "/stock/deprecation"]
         links = ["Kitchen Products", "Material Requests", "Products", "Sales", "Stock", "Stock Items", "Purchases", "Stock Deprecation"]
         return {"links": links, "paths": paths}
