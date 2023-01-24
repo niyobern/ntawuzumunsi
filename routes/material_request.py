@@ -17,9 +17,13 @@ def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Dep
     requests = db.query(models.MaterialRequest).filter(models.MaterialRequest.accepted == None).filter(models.MaterialRequest.created_at.between(start, end)).filter(models.MaterialRequest.tag.contains(search)).order_by(models.MaterialRequest.created_at.desc()).limit(limit).offset(skip).all()
     requests_list = []
     for request in requests:
+<<<<<<< HEAD
         creator = db.query(models.User).filter(models.User.id == request.creator).first()
         material = db.query(models.StockItem).filter(models.StockItem.id == request.item_id).first()
         item = {"Id": request.id, "item_id": material.name, "Quantity": request.quantity, "Creator": creator.name, "accepted": request.accepted} 
+=======
+        item = {"Id": request.id, "Stock_id": request.stock_id, "Quantity": request.quantity, "Creator": request.creator.id, "Description": request.tag, "accepted": request.accepted}       
+>>>>>>> 43322b161c52d2ea85b761a24e8088cee6cbbbc2
         requests_list.append(item)
     return requests_list
 
@@ -54,7 +58,8 @@ def accept_request(ids: List[int], db: Session = Depends(get_db), current_user: 
             return HTTPException(status_code=status.HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS, detail=f"{id} the request have been declined, so it can't be edited")
         elif found_request.accepted == True:
             return HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} already accepted")
-        else: request_query.update(found_request, accepted=True)
+        request_query.update({"accepted": True}, synchronize_session=False)
+        db.commit()
     return Response(status_code=status.HTTP_202_ACCEPTED, detail="done")
 
 
@@ -71,7 +76,9 @@ def deny_request(ids: List[int], db: Session = Depends(get_db), current_user: sc
             raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} has been accepted before")
         elif found_query.accepted == False:
             raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} has beeen already declined")
-        else: request_query.update(found_query, accepted=False)
+        request_query.update({"accepted": True}, synchronize_session=False)
+        db.commit()
+    return Response(status_code=status.HTTP_202_ACCEPTED, detail="done")
 
 
 
