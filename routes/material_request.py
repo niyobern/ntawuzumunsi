@@ -52,7 +52,8 @@ def accept_request(ids: List[int], db: Session = Depends(get_db), current_user: 
             return HTTPException(status_code=status.HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS, detail=f"{id} the request have been declined, so it can't be edited")
         elif found_request.accepted == True:
             return HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} already accepted")
-        else: request_query.update(found_request, accepted=True)
+        request_query.update({"accepted": True}, synchronize_session=False)
+        db.commit()
     return Response(status_code=status.HTTP_202_ACCEPTED, detail="done")
 
 
@@ -69,7 +70,9 @@ def deny_request(ids: List[int], db: Session = Depends(get_db), current_user: sc
             raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} has been accepted before")
         elif found_query.accepted == False:
             raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} has beeen already declined")
-        else: request_query.update(found_query, accepted=False)
+        request_query.update({"accepted": True}, synchronize_session=False)
+        db.commit()
+    return Response(status_code=status.HTTP_202_ACCEPTED, detail="done")
 
 
 
