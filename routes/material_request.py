@@ -17,7 +17,7 @@ def get_requests(db: Session = Depends(get_db), current_user: schemas.User = Dep
     requests = db.query(models.MaterialRequest).filter(models.MaterialRequest.accepted == None).filter(models.MaterialRequest.created_at.between(start, end)).filter(models.MaterialRequest.tag.contains(search)).order_by(models.MaterialRequest.created_at.desc()).limit(limit).offset(skip).all()
     requests_list = []
     for request in requests:
-        item = {"Id": request.id, "Stock_id": request.stock_id, "Quantity": request.quantity, "Creator": request.creator.id, "Description": request.description, "accepted": request.accepted}       
+        item = {"Id": request.id, "Stock_id": request.stock_id, "Quantity": request.quantity, "Creator": request.creator.id, "Description": request.tag, "accepted": request.accepted}       
         requests_list.append(item)
     return requests_list
 
