@@ -56,7 +56,7 @@ def accept_request(ids: List[int], db: Session = Depends(get_db), current_user: 
             return HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} already accepted")
         request_query.update({"accepted": True}, synchronize_session=False)
         db.commit()
-    return Response(status_code=status.HTTP_202_ACCEPTED, detail="done")
+    return Response(status_code=status.HTTP_202_ACCEPTED, content={"message": "done"})
 
 
 @router.post('/deny')
@@ -74,8 +74,7 @@ def deny_request(ids: List[int], db: Session = Depends(get_db), current_user: sc
             raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"{id} has beeen already declined")
         request_query.update({"accepted": False}, synchronize_session=False)
         db.commit()
-    return Response(status_code=status.HTTP_202_ACCEPTED, detail="done")
-
+    return Response(status_code=status.HTTP_202_ACCEPTED, content={"message": "done"})
 
 
 
